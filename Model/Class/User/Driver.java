@@ -3,7 +3,7 @@ package Model.Class.User;
 import java.util.Date;
 
 public class Driver {
-    private String order;
+    private String order; //pertimbangan pake enum buat orderan(sedang diambil/sedang diantar/sudah diantar) kalo ga ribet
     private Date tglOrder;
     private double rating;
     private double pendapatan;
