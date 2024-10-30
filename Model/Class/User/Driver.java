@@ -2,14 +2,20 @@ package Model.Class.User;
 
 import java.util.Date;
 
-public class Driver {
-    private String order; //pertimbangan pake enum buat orderan(sedang diambil/sedang diantar/sudah diantar) kalo ga ribet
+import Model.Enum.UserType;
+
+public class Driver extends User {
+    private String order; // pertimbangan pake enum buat orderan(sedang diambil/sedang diantar/sudah
+                          // diantar) kalo ga ribet
     private Date tglOrder;
     private double rating;
     private double pendapatan;
     private String keluhan;
 
-    public Driver(String order, Date tglOrder, double rating, double pendapatan, String keluhan) {
+    public Driver(int iD_user, String username, String name, String password, String phoneNumber, String email,
+            boolean blocked, UserType userType, String order, Date tglOrder, double rating, double pendapatan,
+            String keluhan) {
+        super(iD_user, username, name, password, phoneNumber, email, blocked, userType);
         this.order = order;
         this.tglOrder = tglOrder;
         this.rating = rating;
