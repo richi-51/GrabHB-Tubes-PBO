@@ -3,7 +3,7 @@ package Model.Class.Location;
 public class Lokasi extends Wilayah{
     private String alamat;
 
-
+    // Constructor
     public Lokasi(int iD_wilayah, String kelurahan, String kecamatan, String kota, double garisLintang, double garisBujur, String alamat){
         super(iD_wilayah, kelurahan, kecamatan, kota, garisLintang, garisBujur);
         this.alamat = alamat;
