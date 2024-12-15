@@ -13,7 +13,8 @@ public abstract class User {
     private UserType userType; // buat enum tipe user
     
     
-    public User(String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType) {
+    public User(int id_user, String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType) {
+        this.ID_User = id_user;
         this.username = username;
         this.name = name;
         this.password = password;
@@ -25,6 +26,9 @@ public abstract class User {
 
 
     // Getter and Setter
+    public int getIdUser() {
+        return ID_User;
+    }
     public String getUsername() {
         return username;
     }

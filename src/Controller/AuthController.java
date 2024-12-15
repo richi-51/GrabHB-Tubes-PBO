@@ -3,6 +3,7 @@ package Controller;
 import Model.Class.User.Admin;
 import Model.Class.User.Customer;
 import Model.Class.User.Driver;
+import Model.Enum.StatusAcc;
 import Model.Enum.UserType;
 import Model.Class.Db.DatabaseHandler;
 import Model.Class.Singleton.*;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 
 public class AuthController {
@@ -31,38 +33,48 @@ public class AuthController {
     private class LoginAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        String username = loginView.getUsername();
+        String usernameEmail = loginView.getUsernameEmail();
         String password = loginView.getPassword();
 
         try (Connection conn = DatabaseHandler.connect()) {
+            String queryUser = "";
+            if (usernameEmail.contains("@")) {
+                queryUser = "SELECT * FROM Users WHERE email = ? AND password = ?";
+            }else{
+                queryUser = "SELECT * FROM Users WHERE username = ? AND password = ?";
+            }
+
             // Periksa apakah user ada di tabel Users
-            String queryUser = "SELECT * FROM Users WHERE username = ? AND password = ?";
             var preparedStatement = conn.prepareStatement(queryUser);
-            preparedStatement.setString(1, username);
+            preparedStatement.setString(1, usernameEmail);
             preparedStatement.setString(2, password);
 
             var resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 int userId = resultSet.getInt("ID_User");
+                int vehicleId = resultSet.getInt("vehicle_ID");
                 String name = resultSet.getString("name");
+                String username =  resultSet.getString("username");
                 String email = resultSet.getString("email");
                 String phone = resultSet.getString("phoneNumber");
-
-                // Periksa role berdasarkan relasi dengan tabel lainnya
-                String userType = checkUserRole(conn, userId);
+                Date updateProfileAt = resultSet.getDate("updateProfileAt");
+                String userType = resultSet.getString("userType");
+                String statusAcc = resultSet.getString("statusAcc");
+                Date createdAccAt = resultSet.getDate("createdAccAt");
+                System.out.println(updateProfileAt);
 
                 // Simpan data login di Singleton sesuai role
                 if ("Admin".equalsIgnoreCase(userType)) {
                     SingletonManger.getInstance().setLoggedInUser(new Admin(
-                            username, name, password, phone, email, null, UserType.ADMIN, userId
+                            userId, username, name, password, phone, email, updateProfileAt, UserType.ADMIN
                     ));
                 } else if ("Customer".equalsIgnoreCase(userType)) {
                     SingletonManger.getInstance().setLoggedInUser(new Customer(
-                            username, name, password, phone, email, null, UserType.CUSTOMER, userId, null, null, null, null
+                            userId, username, name, password, phone, email, updateProfileAt, UserType.CUSTOMER, getStatusAcc(statusAcc), createdAccAt, null, null
                     ));
                 } else if ("Driver".equalsIgnoreCase(userType)) {
                     SingletonManger.getInstance().setLoggedInUser(new Driver(
-                            username, name, password, phone, email, null, UserType.DRIVER, userId, null, null, null, null, null, 0.0
+                            userId, username, name, password, phone, email,updateProfileAt,  UserType.DRIVER, getStatusAcc(statusAcc), null, createdAccAt, vehicleId, null, null, 0.0
                     ));
                 }
 
@@ -76,43 +88,8 @@ public class AuthController {
         }
     }
 
-    // Method untuk mengecek role user berdasarkan relasi tabel
-    private String checkUserRole(Connection conn, int userId) throws SQLException {
-        // Periksa apakah user adalah Admin
-        String queryAdmin = "SELECT 1 FROM Admin WHERE ID_User = ?";
-        try (var psAdmin = conn.prepareStatement(queryAdmin)) {
-            psAdmin.setInt(1, userId);
-            try (var rsAdmin = psAdmin.executeQuery()) {
-                if (rsAdmin.next()) {
-                    return "Admin";
-                }
-            }
-        }
-
-        // Periksa apakah user adalah Customer
-        String queryCustomer = "SELECT 1 FROM Customer WHERE ID_User = ?";
-        try (var psCustomer = conn.prepareStatement(queryCustomer)) {
-            psCustomer.setInt(1, userId);
-            try (var rsCustomer = psCustomer.executeQuery()) {
-                if (rsCustomer.next()) {
-                    return "Customer";
-                }
-            }
-        }
-
-        // Periksa apakah user adalah Driver
-        String queryDriver = "SELECT 1 FROM Driver WHERE ID_User = ?";
-        try (var psDriver = conn.prepareStatement(queryDriver)) {
-            psDriver.setInt(1, userId);
-            try (var rsDriver = psDriver.executeQuery()) {
-                if (rsDriver.next()) {
-                    return "Driver";
-                }
-            }
-        }
-
-        // Jika tidak ditemukan
-        return "Unknown";
+    private StatusAcc getStatusAcc(String accStatus){
+        return accStatus.equalsIgnoreCase("Blocked") ? StatusAcc.BLOCKED : StatusAcc.UNBLOCKED;
     }
 }
 

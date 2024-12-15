@@ -8,7 +8,6 @@ import Model.Class.Order.Order;
 import Model.Class.Payment.Ovo;
 
 public class Customer extends User {
-    private int ID_Customer;
     private StatusAcc statusAcc;
     private Date createdAccAt;
 
@@ -17,9 +16,8 @@ public class Customer extends User {
 
 
     // Constructor
-    public Customer(String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType, int iD_Customer, StatusAcc statusAcc, Date createdAccAt, Ovo ovoE_money, Order order) {
-        super(username, name, password, phoneNumber, email, updateProfileAt, userType);
-        ID_Customer = iD_Customer;
+    public Customer(int id_customer, String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType, StatusAcc statusAcc, Date createdAccAt, Ovo ovoE_money, Order order) {
+        super(id_customer, username, name, password, phoneNumber, email, updateProfileAt, userType);
         this.statusAcc = statusAcc;
         this.createdAccAt = createdAccAt;
         this.ovoE_money = ovoE_money;
@@ -29,10 +27,7 @@ public class Customer extends User {
     
     // Getter and Setter
     public int getID_Customer() {
-        return ID_Customer;
-    }
-    public void setID_Customer(int iD_Customer) {
-        ID_Customer = iD_Customer;
+        return super.getIdUser();
     }
     public StatusAcc getStatusAcc() {
         return statusAcc;
@@ -42,9 +37,6 @@ public class Customer extends User {
     }
     public Date getCreatedAccAt() {
         return createdAccAt;
-    }
-    public void setCreatedAccAt(Date createdAccAt) {
-        this.createdAccAt = createdAccAt;
     }
     public Ovo getOvoE_money() {
         return ovoE_money;
