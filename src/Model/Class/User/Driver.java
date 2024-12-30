@@ -1,30 +1,35 @@
 package Model.Class.User;
+import java.util.ArrayList;
 import java.util.Date;
 
 import Model.Class.Vehicle.*;
 import Model.Class.Order.Order;
+import Model.Class.Payment.Ovo;
 import Model.Enum.*;
 public class Driver extends User{
     private StatusAcc statusAcc;
+    private StatusVerification verificationStatus;
+
     private DriverStatus availability; // untuk program aja
     private Date createdAccAt;
 
-    private int vehicleID;
     private Vehicle vehicle;
     
-    private Order order;
+    private ArrayList<Order> order = new ArrayList<>();
     private double rating; // untuk program aja   
-    
+    private Ovo ovoDriver;
+
     // Constructor
-    public Driver(int id_driver, String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType, StatusAcc statusAcc, DriverStatus availability, Date createdAccAt, int vehicle_id, Vehicle vehicle, Order order, double rating) {
-        super(id_driver, username, name, password, phoneNumber, email, updateProfileAt, userType);
+    public Driver(int id_driver, String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType, String picPath, StatusAcc statusAcc, DriverStatus availability, Date createdAccAt, Vehicle vehicle, ArrayList<Order> order, double rating, Ovo ovo, StatusVerification verificationStatus) {
+        super(id_driver, username, name, password, phoneNumber, email, updateProfileAt, userType, picPath);
         this.statusAcc = statusAcc;
         this.availability = availability;
         this.createdAccAt = createdAccAt;
-        this.vehicleID = vehicle_id;
         this.vehicle = vehicle;
         this.order = order;
         this.rating = rating;
+        this.ovoDriver = ovo;
+        this.verificationStatus = verificationStatus;
     }
 
     // Getter and Setter
@@ -46,10 +51,6 @@ public class Driver extends User{
     public Date getCreatedAccAt() {
         return createdAccAt;
     }
-
-    public int getVehicleID() {
-        return vehicleID;
-    }
     
     public Vehicle getVehicle() {
         return vehicle;
@@ -57,10 +58,10 @@ public class Driver extends User{
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
-    public Order getOrder() {
+    public ArrayList<Order> getOrder() {
         return order;
     }
-    public void setOrder(Order order) {
+    public void setOrder(ArrayList<Order> order) {
         this.order = order;
     }
     public double getRating() {
@@ -68,6 +69,22 @@ public class Driver extends User{
     }
     public void setRating(double rating) {
         this.rating = rating;
+    }
+    
+    public Ovo getOvoDriver() {
+        return ovoDriver;
+    }
+
+    public void setOvoDriver(Ovo ovoDriver) {
+        this.ovoDriver = ovoDriver;
+    }
+
+    public StatusVerification getVerificationStatus() {
+        return verificationStatus;
+    }
+
+    public void setVerificationStatus(StatusVerification verificationStatus) {
+        this.verificationStatus = verificationStatus;
     }
 
 }
