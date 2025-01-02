@@ -18,12 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import Controller.PendapatanController;
-import Model.Class.Order.Order;
 
 public class TotalPendapatan extends JPanel {
-    ArrayList<Order> orders = new ArrayList<>();
-    JButton block_UnblockButton[];
-    JButton verifyButton[];
     JPanel panelSorting;
 
     final int WIDTH_PANEL;
@@ -88,6 +84,7 @@ public class TotalPendapatan extends JPanel {
         JPanel containerPanel = new JPanel();
         containerPanel.setLayout(new GridLayout(2, 1, 0 , 10));
         containerPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 10));
+        containerPanel.setPreferredSize(new Dimension(WIDTH_PANEL-30, 200));
         
         containerPanel.add(panelSorting);
 
