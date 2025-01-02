@@ -25,6 +25,7 @@ import Model.Class.Order.Order;
 import Model.Class.Order.Voucher;
 import Model.Class.Payment.Ovo;
 import Model.Class.Singleton.*;
+import View.HistoryOrder;
 import View.LoadingForRegist;
 import View.LoginForm;
 import View.ManageCustomer;
@@ -112,17 +113,17 @@ public class AuthController {
                     String statusAcc = resultSet.getString("statusAcc");
                     Date createdAccAt = resultSet.getDate("createdAccAt");
 
+                    // Inisialisasi TemplateMenu untuk mendapat WIDTH dan HEIGHT output Menu
+                    TemplateMenu tmp = new TemplateMenu();
                     // Simpan data login di Singleton sesuai role
                     if ("Admin".equalsIgnoreCase(userType)) {
                         SingletonManger.getInstance().setLoggedInUser(new Admin(
                                 userId, username, name, password, phone, email, updateProfileAt, UserType.ADMIN,
                                 resultSet.getString("profilePhoto")));
 
-                        TemplateMenu tmp = new TemplateMenu();
-                        Component panels[] = {new UpdateProfile(tmp), new ManageCustomer(tmp), new ManageDriver(tmp), new ManageVoucher(tmp), new ManageLaporan(tmp), new TotalPendapatan(tmp, false)};
+                        Component panels[] = {new UpdateProfile(tmp), new ManageCustomer(tmp), new ManageDriver(tmp), new ManageVoucher(tmp), new ManageLaporan(tmp), new HistoryOrder(tmp, false, true, false), new TotalPendapatan(tmp, false), null}; // Penambahan null diakhir untuk tombol logOut
 
-                        new TemplateMenu("Admin HomePage", new String[]{"Update Profile", "Manage Customers", "Manage Drivers", "Manage Vouchers", "Manage Reports", "View Revenue"}, panels, "Welcome to Admin Panel");
-
+                        new TemplateMenu("Admin HomePage", new String[]{"Update Profile", "Manage Customers", "Manage Drivers", "Manage Vouchers", "Manage Reports", "Transactions", "View Revenue", ""}, panels, "Welcome to Admin Home Page!");
 
                     } else if ("Customer".equalsIgnoreCase(userType)) {
                         SingletonManger.getInstance().setLoggedInUser(new Customer(
@@ -130,6 +131,12 @@ public class AuthController {
                                 resultSet.getString("profilePhoto"),
                                 getStatusAcc(statusAcc), createdAccAt, getOvo(resultSet.getInt("ID_Tlp")),
                                 getOrderUser(userId, true)));
+
+                        // Component panel masih harus disesuaikan dengan menu-menu customer
+                        Component panels[] = {new UpdateProfile(tmp), new ManageCustomer(tmp), new ManageDriver(tmp), new ManageVoucher(tmp), new ManageLaporan(tmp), new HistoryOrder(tmp, false, false, true), new TotalPendapatan(tmp, false), null}; // Penambahan null diakhir untuk tombol logOut
+
+                        new TemplateMenu("Customer HomePage", new String[]{"Update Profile", "Manage Customers", "Manage Drivers", "Manage Vouchers", "Manage Reports", "History Orders", "View Revenue", ""}, panels, "Welcome to GrabHB!");
+
                     } else if ("Driver".equalsIgnoreCase(userType)) {
                         ArrayList<Order> ordersDriver = getOrderUser(userId, false);
                         double ratingDriver = getRatingDriver(ordersDriver);
@@ -147,6 +154,11 @@ public class AuthController {
                         prepareStmtupdate.setString(1, "Online");
                         prepareStmtupdate.setInt(2, userId);
                         prepareStmtupdate.executeUpdate();
+
+                        // Component panel masih harus disesuaikan dengan menu-menu driver
+                        Component panels[] = {new UpdateProfile(tmp), new ManageCustomer(tmp), new ManageDriver(tmp), new ManageVoucher(tmp), new ManageLaporan(tmp), new TotalPendapatan(tmp, false), null}; // Penambahan null diakhir untuk tombol logOut
+
+                        new TemplateMenu("Driver HomePage", new String[]{"Update Profile", "Manage Customers", "Manage Drivers", "Manage Vouchers", "Manage Reports", "View Revenue"}, panels, "Welcome to GrabHB, Drivers!");
                     }
 
                     // Close LogIn window

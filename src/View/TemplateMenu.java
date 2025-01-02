@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import Controller.AuthController;
 import Model.Class.Singleton.SingletonManger;
 import Model.Class.User.Admin;
 import Model.Class.User.Driver;
@@ -154,7 +155,7 @@ public class TemplateMenu extends JFrame {
     
     public void addMenus(Component panelMenu[], String[] menuNames){
         
-        for (int i = 0; i < buttons.length; i++) {
+        for (int i = 0; i < buttons.length-1; i++) {
             buttons[i] = new JButton(menuNames[i]);
             final String menuName = menuNames[i];
 
@@ -169,6 +170,22 @@ public class TemplateMenu extends JFrame {
 
             
         }
+        // Untuk Button LogOut
+        buttons[buttons.length-1] = new JButton("LogOut");
+        buttons[buttons.length-1].addActionListener(e -> {
+            this.dispose();
+
+            // Hapus Singletonnya
+            SingletonManger.getInstance().setLoggedInUser(null);
+
+            // Tampilkan menu LogIn
+            LoginForm loginView = new LoginForm();
+            RegisterForm registerView = new RegisterForm();
+            new AuthController(loginView, registerView);
+
+            loginView.setVisible(true);
+
+        });
     }
 
     
@@ -209,6 +226,9 @@ public class TemplateMenu extends JFrame {
     public int getHeightMenuPanels(){
         return HEIGHT_FRAME-35;
     }
+    public void closeFrame(){
+        this.dispose();
+    }
 
 
     public static void main(String[] args) {
@@ -240,9 +260,9 @@ public class TemplateMenu extends JFrame {
         panel10.add(new JLabel("This is the ninth panel."));
 
         TemplateMenu tmp = new TemplateMenu();
-        Component panels[] = {panel1, panel2, panel3, panel4, new TotalPendapatan(tmp, true), new ManageLaporan(tmp), new ManageVoucher(tmp), new ManageDriver(tmp), new ManageCustomer(tmp), new UpdateProfile(tmp)};
+        Component panels[] = {panel1, panel2, panel3, new TotalPendapatan(tmp, true), new ManageLaporan(tmp), new ManageVoucher(tmp), new ManageDriver(tmp), new ManageCustomer(tmp), new UpdateProfile(tmp), null};
 
-        new TemplateMenu("trial", new String[]{"Manage Customers", "Manage Drivers", "Manage Vouchers", "Panel-4", "Panel-5", "Panel-6", "Panel-7", "Panel-8", "Panel-9", "Panel-10"}, panels, "Welcome to Admin Panel");
+        tmp = new TemplateMenu("trial", new String[]{"Manage Customers", "Manage Drivers", "Manage Vouchers", "Panel-4", "Panel-5", "Panel-6", "Panel-7", "Panel-8", "Panel-9"}, panels, "Welcome to Admin Panel");
     }
 
 }

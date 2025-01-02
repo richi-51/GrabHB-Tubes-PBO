@@ -196,7 +196,7 @@ public class PendapatanController {
         double total = 0;
 
         try (Connection conn = DatabaseHandler.connect()) {
-            String query = "SELECT price, jumlahPotongan FROM `order` o LEFT JOIN voucher v ON o.ID_Voucher = v.ID_Voucher WHERE ID_Driver = ? ";
+            String query = "SELECT price, jumlahPotongan FROM `order` o LEFT JOIN voucher v ON o.ID_Voucher = v.ID_Voucher WHERE o.ID_Driver = ? ";
 
             if (!day.equalsIgnoreCase("Tanggal: ") || !month.equalsIgnoreCase("Bulan ke-")
                     || !year.equalsIgnoreCase("Tahun: ")) {

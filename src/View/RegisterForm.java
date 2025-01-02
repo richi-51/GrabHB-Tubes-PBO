@@ -21,7 +21,7 @@ public class RegisterForm extends JFrame {
         setLocationRelativeTo(null);
 
         // Form panel
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(10, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
 

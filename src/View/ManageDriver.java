@@ -26,13 +26,13 @@ import Model.Enum.StatusAcc;
 import Model.Enum.StatusVerification;
 
 public class ManageDriver extends JPanel {
-    ArrayList<Driver> drivers = new ArrayList<>();
-    JButton block_UnblockButton[];
-    JButton verifyButton[];
-    JPanel panelSorting;
+    private ArrayList<Driver> drivers = new ArrayList<>();
+    private JButton block_UnblockButton[];
+    private JButton verifyButton[];
+    private JPanel panelSorting;
 
-    final int WIDTH_PANEL;
-    final int HEIGHT_PANEL;
+    private final int WIDTH_PANEL;
+    private final int HEIGHT_PANEL;
 
     public ManageDriver(TemplateMenu tmp){
         this.drivers = new ManageCustDriverController().getDataDrivers();
