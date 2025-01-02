@@ -14,7 +14,7 @@ public class SaveButtonUpdate {
     public SaveButtonUpdate(String nama, String username, String email, String phoneNum, String password, String profilePhoto, boolean isDriver, String jnsKend, String namaKendaraan, String platNomor, int kapasitasKendaraan) {
         User user = SingletonManger.getInstance().getLoggedInUser();
         try (Connection conn = DatabaseHandler.connect()){
-            String sqlUpdateProfile = "UPDATE users SET name = ?, username = ?, password = ?, email = ?, profilePhoto = ?, updateProfileAt = NOW() WHERE ID_User = ?";
+            String sqlUpdateProfile = "UPDATE users SET name = ?, username = ?, password = ?, email = ?, profilePhoto = ?, updateProfileA WHERE ID_User = ?";
 
             var preparedStmtUser = conn.prepareStatement(sqlUpdateProfile);
             preparedStmtUser.setString(1, nama);

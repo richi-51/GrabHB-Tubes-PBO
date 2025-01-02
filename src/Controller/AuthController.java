@@ -27,12 +27,20 @@ import Model.Class.Payment.Ovo;
 import Model.Class.Singleton.*;
 import View.LoadingForRegist;
 import View.LoginForm;
+import View.ManageCustomer;
+import View.ManageDriver;
+import View.ManageLaporan;
+import View.ManageVoucher;
 import View.RegisterForm;
+import View.TemplateMenu;
+import View.TotalPendapatan;
+import View.UpdateProfile;
 
 import javax.swing.*;
+
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.security.Timestamp;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -42,14 +50,34 @@ public class AuthController {
     private LoginForm loginView;
     private RegisterForm registerView;
 
+    public AuthController(){
+
+    }
     public AuthController(LoginForm loginView, RegisterForm registerView) {
         this.loginView = loginView;
         this.registerView = registerView;
-
+        
         this.loginView.addLoginListener(new LoginAction());
         this.loginView.addRegisterListener(e -> registerView.setVisible(true));
         this.registerView.addRegisterListener(new RegisterAction());
-        // this.registerView.addRegisterListener(e-> loginView.dispose());
+        this.registerView.addRegisterListener(e-> loginView.dispose());
+    }
+    
+    // Getter and Setter
+    public LoginForm getLoginView() {
+        return loginView;
+    }
+
+    public void setLoginView(LoginForm loginView) {
+        this.loginView = loginView;
+    }
+
+    public RegisterForm getRegisterView() {
+        return registerView;
+    }
+
+    public void setRegisterView(RegisterForm registerView) {
+        this.registerView = registerView;
     }
 
     private class LoginAction implements ActionListener {
@@ -89,6 +117,13 @@ public class AuthController {
                         SingletonManger.getInstance().setLoggedInUser(new Admin(
                                 userId, username, name, password, phone, email, updateProfileAt, UserType.ADMIN,
                                 resultSet.getString("profilePhoto")));
+
+                        TemplateMenu tmp = new TemplateMenu();
+                        Component panels[] = {new UpdateProfile(tmp), new ManageCustomer(tmp), new ManageDriver(tmp), new ManageVoucher(tmp), new ManageLaporan(tmp), new TotalPendapatan(tmp, false)};
+
+                        new TemplateMenu("Admin HomePage", new String[]{"Update Profile", "Manage Customers", "Manage Drivers", "Manage Vouchers", "Manage Reports", "View Revenue"}, panels, "Welcome to Admin Panel");
+
+
                     } else if ("Customer".equalsIgnoreCase(userType)) {
                         SingletonManger.getInstance().setLoggedInUser(new Customer(
                                 userId, username, name, password, phone, email, updateProfileAt, UserType.CUSTOMER,
@@ -112,10 +147,10 @@ public class AuthController {
                         prepareStmtupdate.setString(1, "Online");
                         prepareStmtupdate.setInt(2, userId);
                         prepareStmtupdate.executeUpdate();
-
                     }
 
-                    JOptionPane.showMessageDialog(loginView, "Login successful as " + userType + "!");
+                    // Close LogIn window
+                    loginView.dispose();
                 } else {
                     JOptionPane.showMessageDialog(loginView, "Invalid username or password!");
                 }

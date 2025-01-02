@@ -76,11 +76,10 @@ public class Voucher {
     public void setServiceType(ServiceType serviceType) {
         this.serviceType = serviceType;
     }
-    public String getDibuatOleh() {
+    public String getDibuat_dieditOleh() {
         return dibuat_dieditOleh;
     }
-    public void setDibuatOleh(String dibuat_dieditOleh) {
+    public void setDibuat_dieditOleh(String dibuat_dieditOleh) {
         this.dibuat_dieditOleh = dibuat_dieditOleh;
     }
-    
 }

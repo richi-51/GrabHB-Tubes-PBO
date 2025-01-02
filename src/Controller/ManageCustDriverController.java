@@ -210,9 +210,9 @@ public class ManageCustDriverController {
     }
 
     private ArrayList<Order> getOrderUser(int id_user, boolean isCustomer) {
-        String orderQuery = "SELECT * FROM `order` o LEFT JOIN voucher v ON v.ID_Voucher = o.ID_Voucher LEFT JOIN laporan l ON l.ID_Order = o.ID_Order WHERE o.ID_Driver = ?";
+        String orderQuery = "SELECT * FROM `order` o LEFT JOIN voucher v ON v.ID_Voucher = o.ID_Voucher LEFT JOIN laporan l ON l.ID_Order = o.ID_Order INNER JOIN users u ON u.ID_User = v.ID_Admin WHERE o.ID_Driver = ?";
         if (isCustomer) {
-            orderQuery = "SELECT * FROM `order` o LEFT JOIN voucher v ON v.ID_Voucher = o.ID_Voucher LEFT JOIN laporan l ON l.ID_Order = o.ID_Order WHERE o.ID_Customer = ?";
+            orderQuery = "SELECT * FROM `order` o LEFT JOIN voucher v ON v.ID_Voucher = o.ID_Voucher LEFT JOIN laporan l ON l.ID_Order = o.ID_Order INNER JOIN users u ON u.ID_User = v.ID_Admin WHERE o.ID_Customer = ?";
         }
 
         try (Connection conn = DatabaseHandler.connect()) {

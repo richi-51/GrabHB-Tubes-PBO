@@ -22,9 +22,7 @@ public class Laporan {
     public int getID_laporan() {
         return ID_laporan;
     }
-    public void setID_laporan(int iD_laporan) {
-        ID_laporan = iD_laporan;
-    }
+
     public String getIsiKeluhan() {
         return isiKeluhan;
     }

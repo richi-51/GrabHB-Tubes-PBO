@@ -212,11 +212,11 @@ public class TemplateMenu extends JFrame {
 
 
     public static void main(String[] args) {
-        Admin admin = new Admin(0, "username_Admin", "Admin-1", "12345", "08765321879", "admin@root.com", null, null, "");
+        Admin admin = new Admin(3, "username_Admin", "Admin-1", "12345", "08765321879", "admin@root.com", null, null, "");
 
         Vehicle vehicle = new Car(1, "Toyota Alya", "D123XX", 3);
-        Driver driver = new Driver(0, "driver_username", "driver_name", "12345", "0814355465776", "driver_email@coba.com", null, null, "", null, null, null, vehicle, null, 0, null, StatusVerification.UNVERIFIED);
-        SingletonManger.getInstance().setLoggedInUser(admin);
+        Driver driver = new Driver(1, "driver_username", "driver_name", "12345", "0814355465776", "driver_email@coba.com", null, null, "", null, null, null, vehicle, null, 0, null, StatusVerification.UNVERIFIED);
+        SingletonManger.getInstance().setLoggedInUser(driver);
 
         JPanel panel1 = new JPanel();
         panel1.add(new JLabel("This is the Manage Customers panel."));
@@ -240,7 +240,7 @@ public class TemplateMenu extends JFrame {
         panel10.add(new JLabel("This is the ninth panel."));
 
         TemplateMenu tmp = new TemplateMenu();
-        Component panels[] = {panel1, panel2, panel3, panel4, panel5, panel6, panel7, new ManageDriver(tmp), new ManageCustomer(tmp), new UpdateProfile(tmp)};
+        Component panels[] = {panel1, panel2, panel3, panel4, new TotalPendapatan(tmp, true), new ManageLaporan(tmp), new ManageVoucher(tmp), new ManageDriver(tmp), new ManageCustomer(tmp), new UpdateProfile(tmp)};
 
         new TemplateMenu("trial", new String[]{"Manage Customers", "Manage Drivers", "Manage Vouchers", "Panel-4", "Panel-5", "Panel-6", "Panel-7", "Panel-8", "Panel-9", "Panel-10"}, panels, "Welcome to Admin Panel");
     }

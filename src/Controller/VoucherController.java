@@ -29,8 +29,8 @@ public class VoucherController {
                 double jumlahPotongan = rs.getDouble("jumlahPotongan");
                 Date validFrom = rs.getDate("valid_from");
                 Date validTo = rs.getDate("valid_to");
-                LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
-                LocalDateTime updateAt = rs.getTimestamp("update_at").toLocalDateTime();
+                LocalDateTime createdAt = rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null;
+                LocalDateTime updateAt = rs.getTimestamp("update_at") != null ? rs.getTimestamp("update_at").toLocalDateTime() : null;
                 String dibuat_dieditOleh = rs.getString("name");
 
                 vouchers.add(new Voucher(idVoucher, kodeVoucher, jumlahPotongan, serviceType, validFrom, validTo, createdAt, updateAt, dibuat_dieditOleh));
