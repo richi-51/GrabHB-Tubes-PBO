@@ -1,6 +1,5 @@
 package Model.Class.Order;
 
-import Model.Class.User.*;
 import java.util.Date;
 
 public class Voucher {
@@ -9,18 +8,16 @@ public class Voucher {
     private double jumlahPotongan;
     private Date valid_from;
     private Date valid_to;
-    private Admin created_by; // hapus atribut ini
     private Date created_at;
     private Date updated_at;
 
     // Constructors
-    public Voucher(int iD_Voucher, String kodeVoucher, double jumlahPotongan, Date valid_from, Date valid_to, Admin created_by, Date created_at, Date updated_at) {
+    public Voucher(int iD_Voucher, String kodeVoucher, double jumlahPotongan, Date valid_from, Date valid_to, Date created_at, Date updated_at) {
         ID_Voucher = iD_Voucher;
         this.kodeVoucher = kodeVoucher;
         this.jumlahPotongan = jumlahPotongan;
         this.valid_from = valid_from;
         this.valid_to = valid_to;
-        this.created_by = created_by;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
@@ -54,12 +51,6 @@ public class Voucher {
     }
     public void setValid_to(Date valid_to) {
         this.valid_to = valid_to;
-    }
-    public Admin getCreated_by() {
-        return created_by;
-    }
-    public void setCreated_by(Admin created_by) {
-        this.created_by = created_by;
     }
     public Date getCreated_at() {
         return created_at;
