@@ -1,5 +1,5 @@
 package Model.Enum;
 
 public enum OrderStatus {
-    COMPLETE, ON_PROCESS;
+    COMPLETE, ON_PROCESS, CANCELLED;
 }

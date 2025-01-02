@@ -1,28 +1,21 @@
 package Model.Class.Vehicle;
 
 public class Vehicle {
-    private int ID_Driver;
     private int vehicle_ID;
 
     private String vehicleName;
     private String plateNumber;
+    private int jumlahSeat;
 
     // Constructor
-    public Vehicle(int iD_Driver, int vehicle_ID, String vehicleName, String plateNumber) {
-        ID_Driver = iD_Driver;
+    public Vehicle(int vehicle_ID, String vehicleName, String plateNumber, int jumlahSeat) {
         this.vehicle_ID = vehicle_ID;
         this.vehicleName = vehicleName;
         this.plateNumber = plateNumber;
+        this.jumlahSeat = jumlahSeat;
     }
-
 
     // Getter and Setter
-    public int getID_Driver() {
-        return ID_Driver;
-    }
-    public void setID_Driver(int iD_Driver) {
-        ID_Driver = iD_Driver;
-    }
     public int getVehicle_ID() {
         return vehicle_ID;
     }
@@ -41,4 +34,13 @@ public class Vehicle {
     public void setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
     }
+    public int getJumlahSeat() {
+        return jumlahSeat;
+    }
+    public void setJumlahSeat(int jumlahSeat) {
+        this.jumlahSeat = jumlahSeat;
+    }
+
+
+    
 }

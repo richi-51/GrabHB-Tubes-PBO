@@ -11,6 +11,10 @@ import javax.swing.SwingUtilities;
 
 import Model.Class.Singleton.SingletonManger;
 import Model.Class.User.Admin;
+import Model.Class.User.Driver;
+import Model.Class.Vehicle.Car;
+import Model.Class.Vehicle.Vehicle;
+import Model.Enum.StatusVerification;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -56,7 +60,10 @@ class CircularImageLabel extends JLabel {
 
 public class TemplateMenu extends JFrame {
     private JButton buttons[];
-    private String profilePic = "D:\\Trace Maze-1 BFS.png";
+    private String profilePic;
+    // Sesuaikan lagi, seperti di komputer kalian
+    // Harus mencari tahu apakah path bisa tanpa dari root direktori
+    
     private JLabel greetLabel, profileLabel;
     private JPanel sideBarPanel, buttonPanel, profilePanel;
 
@@ -67,17 +74,28 @@ public class TemplateMenu extends JFrame {
     private CardLayout cardLayout;
     private JPanel menuPanels;
 
-    public TemplateMenu(String titleFrame, String menuUser[], JPanel panelMenus[], String greetMenu) {
+    public TemplateMenu(){
+
+    }
+
+    public TemplateMenu(String titleFrame, String menuUser[], Component panelMenus[], String greetMenu) {
+        // set default profile pic
+        profilePic = getAbsolutePathFoto("../GrabHB-Tubes-PBO/src/Asset/Profile Picture Default.png");
+
+        // ubah profile pic jika sudah di-set sebelumnya
+        setProfilePicPath(SingletonManger.getInstance().getLoggedInUser().getProfilePicPath());
+
         setTitle(titleFrame);
         setSize(WIDTH_FRAME, HEIGHT_FRAME);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // nanti diubah ke do nothing
         setLocationRelativeTo(null);
         setLayout(null);
+        setResizable(false);
 
         // Panel Utama Output
         cardLayout = new CardLayout();
         menuPanels = new JPanel(cardLayout);
-        menuPanels.setBounds(WIDTH_SIDEBAR, 0, WIDTH_FRAME - WIDTH_SIDEBAR, HEIGHT_FRAME);
+        menuPanels.setBounds(WIDTH_SIDEBAR, 0, WIDTH_FRAME-15 - WIDTH_SIDEBAR, HEIGHT_FRAME-35);
         menuPanels.setBorder(BorderFactory.createLineBorder(Color.black,1, true));
 
 
@@ -89,14 +107,14 @@ public class TemplateMenu extends JFrame {
 
         // Sidebar
         sideBarPanel = new JPanel();
-        sideBarPanel.setBounds(0, 0, WIDTH_SIDEBAR, HEIGHT_FRAME);
+        sideBarPanel.setBounds(0, 0, WIDTH_SIDEBAR, HEIGHT_FRAME-35);
         sideBarPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         sideBarPanel.setBorder(BorderFactory.createLineBorder(Color.black,1, true));
         // sideBarPanel.setBackground(Color.green);
 
         // Wadah Foto dan Sapaan
         profilePanel = new JPanel(new BorderLayout());
-        profilePanel.setSize(WIDTH_SIDEBAR - 30, ((int) (HEIGHT_FRAME / 3) - 30));
+        profilePanel.setSize(WIDTH_SIDEBAR - 30, ((int) ((HEIGHT_FRAME-35) / 3) - 30));
 
         // Bagian Foto
         profileLabel = new CircularImageLabel(profilePic);
@@ -130,11 +148,11 @@ public class TemplateMenu extends JFrame {
         // Patut dipertanyakan ada perbedaan width dan height antara sebelum setVisible
         // dan sesudahnya
         SwingUtilities.invokeLater(this::tampilkanGambar);
-
+        System.out.println("Height Panel Template: " + menuPanels.getHeight());
         setVisible(true);
     }
     
-    public void addMenus(JPanel panelMenu[], String[] menuNames){
+    public void addMenus(Component panelMenu[], String[] menuNames){
         
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new JButton(menuNames[i]);
@@ -153,6 +171,7 @@ public class TemplateMenu extends JFrame {
         }
     }
 
+    
     private void tampilkanGambar() {
         // Menampilkan gambar pada JLabel
         ImageIcon imageIcon = new ImageIcon(profilePic);
@@ -161,9 +180,43 @@ public class TemplateMenu extends JFrame {
                 Image.SCALE_SMOOTH);
         profileLabel.setIcon(new ImageIcon(image));
     }
+
+    public String getAbsolutePathFoto(String relativePath) {
+        File file = new File(relativePath);
+        System.out.println("Relative path: " + relativePath);
+        if (file.exists()) {
+            return file.getAbsolutePath();
+        }
+
+        System.out.println("File tidak ditemukan");
+        return "";
+    }
     
+    public void setMenuInUsed(String menuName){
+        cardLayout.show(menuPanels, menuName);
+    }
+
+    public void setProfilePicPath(String profilePicPath){
+        String path = getAbsolutePathFoto(profilePicPath);
+        if (!path.equalsIgnoreCase("")) {
+            profilePic = path;
+        }
+    }
+
+    public int getWidthMenuPanels(){
+        return WIDTH_FRAME-15 - WIDTH_SIDEBAR;
+    }
+    public int getHeightMenuPanels(){
+        return HEIGHT_FRAME-35;
+    }
+
+
     public static void main(String[] args) {
-        SingletonManger.getInstance().setLoggedInUser(new Admin(0, null, "Admin-1", null, null, null, null, null));
+        Admin admin = new Admin(3, "username_Admin", "Admin-1", "12345", "08765321879", "admin@root.com", null, null, "");
+
+        Vehicle vehicle = new Car(1, "Toyota Alya", "D123XX", 3);
+        Driver driver = new Driver(1, "driver_username", "driver_name", "12345", "0814355465776", "driver_email@coba.com", null, null, "", null, null, null, vehicle, null, 0, null, StatusVerification.UNVERIFIED);
+        SingletonManger.getInstance().setLoggedInUser(driver);
 
         JPanel panel1 = new JPanel();
         panel1.add(new JLabel("This is the Manage Customers panel."));
@@ -186,8 +239,8 @@ public class TemplateMenu extends JFrame {
         JPanel panel10 = new JPanel();
         panel10.add(new JLabel("This is the ninth panel."));
 
-        JPanel panels[] = {panel1, panel2, panel3, panel4, panel5, panel6, panel7, panel8, panel9, panel10};
-
+        TemplateMenu tmp = new TemplateMenu();
+        Component panels[] = {panel1, panel2, panel3, panel4, new TotalPendapatan(tmp, true), new ManageLaporan(tmp), new ManageVoucher(tmp), new ManageDriver(tmp), new ManageCustomer(tmp), new UpdateProfile(tmp)};
 
         new TemplateMenu("trial", new String[]{"Manage Customers", "Manage Drivers", "Manage Vouchers", "Panel-4", "Panel-5", "Panel-6", "Panel-7", "Panel-8", "Panel-9", "Panel-10"}, panels, "Welcome to Admin Panel");
     }

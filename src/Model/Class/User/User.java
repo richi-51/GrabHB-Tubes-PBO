@@ -11,9 +11,9 @@ public abstract class User {
     private String email;
     private Date updateProfileAt; // untuk waktu update profile
     private UserType userType; // buat enum tipe user
-    
-    
-    public User(int id_user, String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType) {
+    private String profilePicPath;
+
+    public User(int id_user, String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType, String picPath) {
         this.ID_User = id_user;
         this.username = username;
         this.name = name;
@@ -22,6 +22,7 @@ public abstract class User {
         this.email = email;
         this.updateProfileAt = updateProfileAt;
         this.userType = userType;
+        this.profilePicPath = picPath;
     }
 
 
@@ -70,6 +71,12 @@ public abstract class User {
     }
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+    public String getProfilePicPath() {
+        return profilePicPath;
+    }
+    public void setProfilePicPath(String profilePicPath) {
+        this.profilePicPath = profilePicPath;
     }
     
 }
