@@ -3,6 +3,7 @@ import java.util.Date;
 
 import Model.Class.Vehicle.*;
 import Model.Class.Order.Order;
+import Model.Class.Payment.Ovo;
 import Model.Enum.*;
 public class Driver extends User{
     private int ID_Driver;
@@ -11,20 +12,20 @@ public class Driver extends User{
     private Date createdAccAt;
 
     private Vehicle vehicle;
-    
+    private Ovo ovoE_money;
     private Order order;
     private double rating; // untuk program aja   
     
     // Constructor
-    public Driver(String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType, int iD_Driver, StatusAcc statusAcc, DriverStatus availability, Date createdAccAt, Vehicle vehicle, Order order, double rating) {
-        super(username, name, password, phoneNumber, email, updateProfileAt, userType);
-        ID_Driver = iD_Driver;
+    public Driver(int id_driver, String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType, StatusAcc statusAcc, DriverStatus availability, Date createdAccAt, int vehicle_id, Vehicle vehicle, Order order, double rating) {
+        super(id_driver, username, name, password, phoneNumber, email, updateProfileAt, userType);
         this.statusAcc = statusAcc;
         this.availability = availability;
         this.createdAccAt = createdAccAt;
         this.vehicle = vehicle;
         this.order = order;
         this.rating = rating;
+        this.ovoE_money = ovoE_money;
     }
 
     // Getter and Setter
@@ -71,4 +72,11 @@ public class Driver extends User{
         this.rating = rating;
     }
 
+    public Ovo getOvoE_money() {
+        return ovoE_money;
+    }
+
+    public void setOvoE_money(Ovo ovoE_money) {
+        this.ovoE_money = ovoE_money;
+    }
 }

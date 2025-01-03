@@ -17,9 +17,8 @@ public class Customer extends User {
 
 
     // Constructor
-    public Customer(String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType, int iD_Customer, StatusAcc statusAcc, Date createdAccAt, Ovo ovoE_money, Order order) {
-        super(username, name, password, phoneNumber, email, updateProfileAt, userType);
-        ID_Customer = iD_Customer;
+    public Customer(int id_customer, String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType, StatusAcc statusAcc, Date createdAccAt, Ovo ovoE_money, Order order) {
+        super(id_customer, username, name, password, phoneNumber, email, updateProfileAt, userType);
         this.statusAcc = statusAcc;
         this.createdAccAt = createdAccAt;
         this.ovoE_money = ovoE_money;

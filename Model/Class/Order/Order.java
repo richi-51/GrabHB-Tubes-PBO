@@ -9,7 +9,6 @@ public class Order {
     private int ID_driver;
     private int ID_Customer;
     private Voucher voucher;
-    private Laporan keluhan;
 
     private Lokasi pickUpLoc;
     private Lokasi destination;
@@ -19,14 +18,15 @@ public class Order {
     private Date updateOrder; // jika ganti lokasi destinasi
     private PaymentMethod paymentMethod; // buat function untuk mengecek jika dia OVO
     private double price;
+    private double rating;
+    private String ulasan;
 
     // Constructor
-    public Order(int iD_order, int iD_driver, int iD_Customer, Voucher voucher, Laporan keluhan, Lokasi pickUpLoc, Lokasi destination, ServiceType serviceType, OrderStatus order_status, Date order_date, Date updateOrder, PaymentMethod paymentMethod, double price) {
+    public Order(int iD_order, int iD_driver, int iD_Customer, Voucher voucher, Lokasi pickUpLoc, Lokasi destination, ServiceType serviceType, OrderStatus order_status, Date order_date, Date updateOrder, PaymentMethod paymentMethod, double price, double rating, String ulasan) {
         ID_order = iD_order;
         ID_driver = iD_driver;
         ID_Customer = iD_Customer;
         this.voucher = voucher;
-        this.keluhan = keluhan;
         this.pickUpLoc = pickUpLoc;
         this.destination = destination;
         this.serviceType = serviceType;
@@ -35,6 +35,8 @@ public class Order {
         this.updateOrder = updateOrder;
         this.paymentMethod = paymentMethod;
         this.price = price;
+        this.rating = rating;
+        this.ulasan =ulasan;
     }
     // Getter and setter
     public int getID_order() {
@@ -60,12 +62,6 @@ public class Order {
     }
     public void setVoucher(Voucher voucher) {
         this.voucher = voucher;
-    }
-    public Laporan getKeluhan() {
-        return keluhan;
-    }
-    public void setKeluhan(Laporan keluhan) {
-        this.keluhan = keluhan;
     }
     public Lokasi getPickUpLoc() {
         return pickUpLoc;
@@ -115,4 +111,10 @@ public class Order {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    
+    
+
+
+
 }

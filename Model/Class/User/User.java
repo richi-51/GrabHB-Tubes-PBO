@@ -7,17 +7,17 @@ public abstract class User {
     private String username;
     private String name;
     private String password;
-    private String phoneNumber;
+    // private String phoneNumber;
     private String email;
     private Date updateProfileAt; // untuk waktu update profile
     private UserType userType; // buat enum tipe user
     
     
-    public User(String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType) {
+    public User(int id_user, String username, String name, String password, String phoneNumber, String email, Date updateProfileAt, UserType userType) {
+        this.ID_User = id_user;
         this.username = username;
         this.name = name;
         this.password = password;
-        this.phoneNumber = phoneNumber;
         this.email = email;
         this.updateProfileAt = updateProfileAt;
         this.userType = userType;
@@ -43,12 +43,7 @@ public abstract class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+   
     public String getEmail() {
         return email;
     }
