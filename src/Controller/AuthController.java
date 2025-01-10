@@ -88,6 +88,14 @@ public class AuthController {
             String usernameEmail = loginView.getUsernameEmail();
             String password = loginView.getPassword();
 
+            if (usernameEmail.equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(loginView, "Maaf username tidak boleh kosong!", "Warning Message", JOptionPane.WARNING_MESSAGE);
+                return;
+            }else if (password.equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(loginView, "Maaf password tidak boleh kosong!", "Warning Message", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
             String encryptPass = Encryptor.hash(password);
 
             try (Connection conn = DatabaseHandler.connect()) {
@@ -404,6 +412,32 @@ public class AuthController {
             String statusVerify = "None";
             String statusAcc = "Unblock";
             int rowsInserted = 0;
+
+            if (name.equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(loginView, "Maaf nama tidak boleh kosong!", "Warning Message", JOptionPane.WARNING_MESSAGE);
+                return;
+            }else if (username.equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(loginView, "Maaf username tidak boleh kosong!", "Warning Message", JOptionPane.WARNING_MESSAGE);
+                return;
+            }else if (email.equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(loginView, "Maaf email tidak boleh kosong!", "Warning Message", JOptionPane.WARNING_MESSAGE);
+                return;
+            }else if (!email.contains("@")) {
+                JOptionPane.showMessageDialog(loginView, "Maaf email harus ada @!", "Warning Message", JOptionPane.WARNING_MESSAGE);
+                return;
+            }else if (phone.equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(loginView, "Maaf nomor telepon tidak boleh kosong!", "Warning Message", JOptionPane.WARNING_MESSAGE);
+                return;
+            }else if (!phone.contains("08")) {
+                JOptionPane.showMessageDialog(loginView, "Maaf nomor telepon harus diawali 08.....!", "Warning Message", JOptionPane.WARNING_MESSAGE);
+                return;
+            }else if (password.equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(loginView, "Maaf password tidak boleh kosong!", "Warning Message", JOptionPane.WARNING_MESSAGE);
+                return;
+            }else if (password.length() > 12 || password.length() < 8) {
+                JOptionPane.showMessageDialog(loginView, "Maaf panjang password minimal 8 sampai 12 karakter!", "Warning Message", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
             String encryptPass = Encryptor.hash(password);
 
