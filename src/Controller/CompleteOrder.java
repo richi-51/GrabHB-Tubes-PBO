@@ -29,11 +29,16 @@ public class CompleteOrder {
                 try (ResultSet rs = stmt2.executeQuery()) {
                     if (rs.next()) {
                         double price = rs.getDouble("price");
+
                         PaymentMethod paymentMethod = PaymentMethod.valueOf(rs.getString("paymentMethod").trim().toUpperCase());
                         if (paymentMethod == PaymentMethod.OVO) {
                             double getPlusSaldo = price + driver.getOvoDriver().getSaldo();
-                            String queryUpdateSaldo = "UPDATE users SET availabilityDriver = 'Online' WHERE ID_User = ?";
-                                  
+                            String queryUpdateSaldo = "UPDATE ovo o INNER JOIN notlp n ON o.ID_Tlp = n.ID_Tlp INNER JOIN users u ON n.ID_User = u.ID_User SET o.saldo = ? WHERE u.ID_User = ?";
+                            PreparedStatement saldoSTMT = conn.prepareStatement(queryUpdateSaldo);
+                            saldoSTMT.setDouble(1, getPlusSaldo);
+                            saldoSTMT.setInt(2, driver.getID_Driver());
+                            saldoSTMT.executeUpdate();  
+                            driver.getOvoDriver().setSaldo(getPlusSaldo);      
                         }
                     } else {
         

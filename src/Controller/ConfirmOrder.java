@@ -22,16 +22,22 @@ public class ConfirmOrder {
                 ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
-                    PaymentMethod paymentMethod = PaymentMethod.valueOf(rs.getString("paymentMethod").trim().toUpperCase());
                     double price = rs.getDouble("price");
                     
+                    PaymentMethod paymentMethod = PaymentMethod.valueOf(rs.getString("paymentMethod").trim().toUpperCase());
                     if (paymentMethod == PaymentMethod.CASH) {
                         double totalPrice = price * 0.9;
                         if (driver.getOvoDriver().getSaldo() < totalPrice) {
                             JOptionPane.showMessageDialog(null, "Saldo Anda tidak mencukupi!", "Error", JOptionPane.ERROR_MESSAGE);
                             return 0;
                         }
-                        saldo -= totalPrice;
+                        double getMinusSaldo = saldo - totalPrice;
+                        String queryUpdateSaldo = "UPDATE ovo o INNER JOIN notlp n ON o.ID_Tlp = n.ID_Tlp INNER JOIN users u ON n.ID_User = u.ID_User SET o.saldo = ? WHERE u.ID_User = ?";
+                        PreparedStatement saldoSTMT = conn.prepareStatement(queryUpdateSaldo);
+                        saldoSTMT.setDouble(1, getMinusSaldo);
+                        saldoSTMT.setInt(2, driver.getID_Driver());
+                        driver.getOvoDriver().setSaldo(getMinusSaldo);  
+                        saldo = driver.getOvoDriver().getSaldo();
                     }
 
                     String updateOrderQuery = "UPDATE `order` SET order_status = 'On_Process', ID_Driver = ? WHERE ID_Order = ?";

@@ -22,7 +22,6 @@ public class DriverOrderPage extends JPanel {
     private JButton confirmButton, completeButton;
     private List<Order> orders;
     private Order currentOrder = null;
-    private double saldo = ((Driver)(SingletonManger.getInstance().getLoggedInUser())).getOvoDriver().getSaldo();
 
     public DriverOrderPage(TemplateMenu tmp) {
 
@@ -49,6 +48,7 @@ public class DriverOrderPage extends JPanel {
         JScrollPane listScrollPane = new JScrollPane(orderList);
         leftPanel.add(listScrollPane, BorderLayout.CENTER);
 
+        double saldo = loggedInUser.getOvoDriver().getSaldo();
         JLabel saldoLabel = new JLabel("Saldo Ovo: " + saldo);
         leftPanel.add(saldoLabel, BorderLayout.SOUTH);
 
@@ -79,10 +79,9 @@ public class DriverOrderPage extends JPanel {
 
                     if (result > 0) {
                         confirmOrder(selectedOrder, loggedInUser);
-                        saldo = result;
                         currentOrder = selectedOrder; 
                     }
-                    saldoLabel.setText("Saldo Ovo: " + saldo);
+                    saldoLabel.setText("Saldo Ovo: " + loggedInUser.getOvoDriver().getSaldo());
                 } else {
                     JOptionPane.showMessageDialog(this, "Silahkan pilih 1 order.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -107,6 +106,7 @@ public class DriverOrderPage extends JPanel {
                     completeOrder(selectedOrder);
                     currentOrder = null; 
                     refreshOrderList();
+                    saldoLabel.setText("Saldo Ovo: " + loggedInUser.getOvoDriver().getSaldo());
                 } else {
                     JOptionPane.showMessageDialog(this, "Please select the active order to complete.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
