@@ -105,7 +105,7 @@ public class HistoryOrder extends JPanel{
         JPanel panelOrders[] = new JPanel[orderSorted.size()];
 
         for (int i = 0; i < orderSorted.size(); i++) {
-            panelOrders[i] = new JPanel(new GridLayout(11,1));
+            panelOrders[i] = new JPanel(new GridLayout(12,1));
             panelOrders[i].setPreferredSize(new Dimension(WIDTH_PANEL - 30, 200));
             panelOrders[i].setBorder(BorderFactory.createLineBorder(Color.black, 2, true));
 
@@ -128,7 +128,7 @@ public class HistoryOrder extends JPanel{
             panelOrders[i].add(new JLabel("Voucher: " + orderSorted.get(i).getVoucher().getKodeVoucher()));
             panelOrders[i].add(new JLabel("Potongan Voucher: " + orderSorted.get(i).getVoucher().getJumlahPotongan()));
 
-            containerPanel.add(panelOrders[i]);
+           
         }
 
         return containerPanel;

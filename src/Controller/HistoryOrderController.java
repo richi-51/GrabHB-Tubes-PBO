@@ -1,6 +1,7 @@
 package Controller;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -365,12 +366,6 @@ public class HistoryOrderController {
         }
         return null;
     }
-
-
-
-
-
-
 
     private PaymentMethod getPaymentMethod(String payment) {
         return payment.equalsIgnoreCase("Cash") ? PaymentMethod.CASH : PaymentMethod.OVO;
