@@ -57,7 +57,7 @@ public class ManageCustomer extends JPanel {
 
             int jmlhTransaksi = 0;
             for (int j = 0; j < customers.get(i).getOrder().size(); j++) {
-                if (customers.get(j).getOrder().get(j).getOrder_status() == OrderStatus.COMPLETE) {
+                if (customers.get(i).getOrder().get(j).getOrder_status() == OrderStatus.COMPLETE) {
                     jmlhTransaksi++;
                 }
             }

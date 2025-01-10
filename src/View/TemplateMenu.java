@@ -90,7 +90,9 @@ public class TemplateMenu extends JFrame {
         profilePic = getAbsolutePathFoto("../GrabHB-Tubes-PBO/src/Asset/Profile Picture Default.png");
 
         // ubah profile pic jika sudah di-set sebelumnya
-        setProfilePicPath(SingletonManger.getInstance().getLoggedInUser().getProfilePicPath());
+        if (SingletonManger.getInstance().getLoggedInUser().getProfilePicPath() != null) {
+            setProfilePicPath(SingletonManger.getInstance().getLoggedInUser().getProfilePicPath());   
+        }
 
         setTitle(titleFrame);
         setSize(WIDTH_FRAME, HEIGHT_FRAME);

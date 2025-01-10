@@ -1,6 +1,8 @@
 package View;
 import javax.swing.*;
 
+import Controller.AuthController;
+
 import java.awt.*;
 
 public class LoadingForRegist extends JFrame {
@@ -57,6 +59,11 @@ public class LoadingForRegist extends JFrame {
 
                 if (okStatus == JOptionPane.OK_OPTION) {
                     LoadingForRegist.this.dispose();
+                    LoginForm loginView = new LoginForm();
+                    RegisterForm registerView = new RegisterForm();
+                    new AuthController(loginView, registerView);
+
+                    loginView.setVisible(true);
                 }
 
             }
