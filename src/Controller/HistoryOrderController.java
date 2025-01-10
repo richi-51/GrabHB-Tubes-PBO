@@ -2,6 +2,7 @@ package Controller;
 
 import java.sql.Connection;
 import java.sql.Date;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ import Model.Class.Db.DatabaseHandler;
 import Model.Class.Location.Lokasi;
 import Model.Class.Order.GrabBike;
 import Model.Class.Order.GrabCar;
+
 import Model.Class.Order.Laporan;
 import Model.Class.Order.Order;
 import Model.Class.Order.Voucher;
@@ -30,6 +32,15 @@ import Model.Enum.StatusVerification;
 import Model.Enum.TypeBikeOrder;
 import Model.Enum.TypeCarOrder;
 import Model.Enum.UserType;
+
+import Model.Class.Order.Order;
+import Model.Class.Order.Voucher;
+import Model.Class.Singleton.SingletonManger;
+import Model.Enum.OrderStatus;
+import Model.Enum.PaymentMethod;
+import Model.Enum.ServiceType;
+import Model.Enum.TypeBikeOrder;
+import Model.Enum.TypeCarOrder;
 
 public class HistoryOrderController {
     public String[] getDayOfOrder(boolean isDriver, boolean isCustomer) {
@@ -380,6 +391,7 @@ public class HistoryOrderController {
 
 
 
+
     public Driver getDetailDriver(int id_user){
         try (Connection conn = DatabaseHandler.connect()) {
             String sqlCustomer = "SELECT * FROM users u LEFT JOIN notlp n ON u.ID_User = n.ID_User WHERE u.ID_User = ?";
@@ -577,6 +589,7 @@ public class HistoryOrderController {
         return rating / orders.size();
     }
 
+
     private PaymentMethod getPaymentMethod(String payment) {
         return payment.equalsIgnoreCase("Cash") ? PaymentMethod.CASH : PaymentMethod.OVO;
     }
@@ -718,5 +731,5 @@ public class HistoryOrderController {
         }
         return false;
     }
-    
+   
 }
