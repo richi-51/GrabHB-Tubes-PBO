@@ -60,13 +60,23 @@ public class HistoryOrder extends JPanel{
         panelSorting = new JPanel(new FlowLayout(25, 20, 100));
         
         JComboBox<String> daysSort = new JComboBox<>(new HistoryOrderController().getDayOfOrder(isDriver, isCustomer));
-        daysSort.setPreferredSize(new Dimension(125, 50));
+        daysSort.setPreferredSize(new Dimension(100, 50));
 
         JComboBox<String> monthSort = new JComboBox<>(new HistoryOrderController().getMonthsOfOrder(isDriver, isCustomer));
-        monthSort.setPreferredSize(new Dimension(125, 50));
+        monthSort.setPreferredSize(new Dimension(100, 50));
         
         JComboBox<String> yearSort = new JComboBox<>(new HistoryOrderController().getYearsOfOrder(isDriver, isCustomer));
-        yearSort.setPreferredSize(new Dimension(125, 50));
+        yearSort.setPreferredSize(new Dimension(100, 50));
+        
+        JComboBox<String> statusOrderSort = new JComboBox<>(
+            new String[]{
+                OrderStatus.CANCELLED.toString(),
+                OrderStatus.COMPLETE.toString(),
+                OrderStatus.ON_PROCESS.toString()
+            }
+            );
+        statusOrderSort.setPreferredSize(new Dimension(100, 50));
+        statusOrderSort.setSelectedIndex(1);
 
         
         JButton sortButton = new JButton("GO");
@@ -74,7 +84,7 @@ public class HistoryOrder extends JPanel{
         sortButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                panelUtama.setViewportView(showHistoryOrder(daysSort.getSelectedItem().toString(), monthSort.getSelectedItem().toString(), yearSort.getSelectedItem().toString(), isAdmin, isDriver));
+                panelUtama.setViewportView(showHistoryOrder(daysSort.getSelectedItem().toString(), monthSort.getSelectedItem().toString(), yearSort.getSelectedItem().toString(), statusOrderSort.getSelectedItem().toString(), isAdmin, isDriver));
                 panelUtama.revalidate();
                 panelUtama.repaint();
             }
@@ -84,11 +94,12 @@ public class HistoryOrder extends JPanel{
         panelSorting.add(daysSort);
         panelSorting.add(monthSort);
         panelSorting.add(yearSort);
+        panelSorting.add(statusOrderSort);
         panelSorting.add(sortButton);
         
         
         // Masukkan containerPanel ke JScrollPane
-        panelUtama.setViewportView(showHistoryOrder("Tanggal: ", "Bulan ke-", "Tahun: ", isAdmin, isDriver));
+        panelUtama.setViewportView(showHistoryOrder("Tanggal: ", "Bulan ke-", "Tahun: ", statusOrderSort.getSelectedItem().toString(), isAdmin, isDriver));
 
         // Masukkan JScrollPane ke panel utama
         add(panelUtama, BorderLayout.CENTER);
@@ -101,14 +112,14 @@ public class HistoryOrder extends JPanel{
     }
 
 
-    private JPanel showHistoryOrder(String day, String month, String year, boolean isAdmin, boolean isDriver){
+    private JPanel showHistoryOrder(String day, String month, String year, String status, boolean isAdmin, boolean isDriver){
         ArrayList<Order> orderSorted;
         if (isAdmin) {
-            orderSorted = new HistoryOrderController().getHistoryOrderAdmin(day, month, year);
+            orderSorted = new HistoryOrderController().getHistoryOrderAdmin(day, month, year, status);
         }else if(isDriver){
-            orderSorted = new HistoryOrderController().getHistoryOrderDriverCust(day, month, year, false);
+            orderSorted = new HistoryOrderController().getHistoryOrderDriverCust(day, month, year, status, false);
         }else{
-            orderSorted = new HistoryOrderController().getHistoryOrderDriverCust(day, month, year, true);
+            orderSorted = new HistoryOrderController().getHistoryOrderDriverCust(day, month, year, status, true);
         }
 
         JPanel containerPanel = new JPanel();

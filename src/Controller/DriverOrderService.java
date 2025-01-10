@@ -17,7 +17,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 public class DriverOrderService {
 
@@ -295,23 +294,5 @@ public class DriverOrderService {
         stmt.setInt(2, ID_Order);
         stmt.executeUpdate();
     }
-
-    // public static double calculateDriverIncomes(int ID_Driver){
-    //     double totalIncomes = 0.0;
-    //     DatabaseHandler conn = new DatabaseHandler();
-    //     conn.connect();
-
-    //     String query = "SELECT SUM(price) AS total_income FROM `order` WHERE ID_Driver = ? AND order_status = 'COMPLETE'";
-    //     PreparedStatement stmt = conn.con.prepareStatement(query);
-    //     stmt.setInt(1, ID_Driver);
-    //     ResultSet rs = stmt.executeQuery();
-
-    //     if (rs.next()) {
-    //         totalIncomes = rs.getDouble("total_income");
-    //     }
-
-    //     conn.disconnect();
-    //     return totalIncomes;
-    // }
 
 }

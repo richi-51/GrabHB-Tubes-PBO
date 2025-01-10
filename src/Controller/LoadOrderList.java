@@ -3,7 +3,6 @@ package Controller;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -14,7 +13,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import View.DriverOrderPage;
-import Model.Enum.DriverStatus;
 import Model.Enum.StatusLaporan;
 import Model.Class.Db.DatabaseHandler;
 import Model.Class.Location.Lokasi;

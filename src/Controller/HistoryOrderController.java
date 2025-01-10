@@ -147,7 +147,7 @@ public class HistoryOrderController {
         return null;
     }
 
-    public ArrayList<Order> getHistoryOrderAdmin(String day, String month, String year) {
+    public ArrayList<Order> getHistoryOrderAdmin(String day, String month, String year, String status) {
 
         try (Connection conn = DatabaseHandler.connect()) {
             ArrayList<Order> orders = new ArrayList<>();
@@ -156,7 +156,7 @@ public class HistoryOrderController {
 
             if (!day.equalsIgnoreCase("Tanggal: ") || !month.equalsIgnoreCase("Bulan ke-")
                     || !year.equalsIgnoreCase("Tahun: ")) {
-                query += " WHERE ";
+                query += " WHERE order_status = ?";
 
                 if (!day.equalsIgnoreCase("Tanggal: ")) {
                     query += "DAY(order_date) = ?";
@@ -184,35 +184,36 @@ public class HistoryOrderController {
             }
 
             var preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, status);
             if (!day.equalsIgnoreCase("Tanggal: ")) {
                 int tanggal = Integer.parseInt(day);
-                preparedStatement.setInt(1, tanggal);
+                preparedStatement.setInt(2, tanggal);
 
                 if (!month.equalsIgnoreCase("Bulan ke-")) {
                     int bulan = Integer.parseInt(month);
-                    preparedStatement.setInt(2, bulan);
+                    preparedStatement.setInt(3, bulan);
 
                     if (!year.equalsIgnoreCase("Tahun: ")) {
                         int tahun = Integer.parseInt(year);
-                        preparedStatement.setInt(3, tahun);
+                        preparedStatement.setInt(4, tahun);
                     }
 
                 } else if (!year.equalsIgnoreCase("Tahun: ")) {
                     int tahun = Integer.parseInt(year);
-                    preparedStatement.setInt(2, tahun);
+                    preparedStatement.setInt(3, tahun);
                 }
 
             } else if (!month.equalsIgnoreCase("Bulan ke-")) {
                 int bulan = Integer.parseInt(month);
-                preparedStatement.setInt(1, bulan);
+                preparedStatement.setInt(2, bulan);
 
                 if (!year.equalsIgnoreCase("Tahun: ")) {
                     int tahun = Integer.parseInt(year);
-                    preparedStatement.setInt(2, tahun);
+                    preparedStatement.setInt(3, tahun);
                 }
             } else if (!year.equalsIgnoreCase("Tahun: ")) {
                 int tahun = Integer.parseInt(year);
-                preparedStatement.setInt(1, tahun);
+                preparedStatement.setInt(2, tahun);
             }
 
             var rs = preparedStatement.executeQuery();
@@ -263,15 +264,15 @@ public class HistoryOrderController {
     }
 
 
-    public ArrayList<Order> getHistoryOrderDriverCust(String day, String month, String year, boolean isCustomer) {
+    public ArrayList<Order> getHistoryOrderDriverCust(String day, String month, String year, String status, boolean isCustomer) {
 
         try (Connection conn = DatabaseHandler.connect()) {
             ArrayList<Order> orders = new ArrayList<>();
 
-            String query = "SELECT * FROM `order` o LEFT JOIN voucher v ON o.ID_Voucher = v.ID_Voucher WHERE o.ID_Driver = ? ";
+            String query = "SELECT * FROM `order` o LEFT JOIN voucher v ON o.ID_Voucher = v.ID_Voucher WHERE o.ID_Driver = ? AND order_status = ?";
 
             if (isCustomer) {
-                query = "SELECT * FROM `order` o LEFT JOIN voucher v ON o.ID_Voucher = v.ID_Voucher WHERE o.ID_Customer = ? ";
+                query = "SELECT * FROM `order` o LEFT JOIN voucher v ON o.ID_Voucher = v.ID_Voucher WHERE o.ID_Customer = ? AND order_status = ?";
             }
 
             if (!day.equalsIgnoreCase("Tanggal: ") || !month.equalsIgnoreCase("Bulan ke-") || !year.equalsIgnoreCase("Tahun: ")) {
@@ -303,35 +304,36 @@ public class HistoryOrderController {
 
             var preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, SingletonManger.getInstance().getLoggedInUser().getIdUser());
+            preparedStatement.setString(2, status);
             if (!day.equalsIgnoreCase("Tanggal: ")) {
                 int tanggal = Integer.parseInt(day);
-                preparedStatement.setInt(2, tanggal);
+                preparedStatement.setInt(3, tanggal);
 
                 if (!month.equalsIgnoreCase("Bulan ke-")) {
                     int bulan = Integer.parseInt(month);
-                    preparedStatement.setInt(3, bulan);
+                    preparedStatement.setInt(4, bulan);
 
                     if (!year.equalsIgnoreCase("Tahun: ")) {
                         int tahun = Integer.parseInt(year);
-                        preparedStatement.setInt(4, tahun);
+                        preparedStatement.setInt(5, tahun);
                     }
 
                 } else if (!year.equalsIgnoreCase("Tahun: ")) {
                     int tahun = Integer.parseInt(year);
-                    preparedStatement.setInt(3, tahun);
+                    preparedStatement.setInt(4, tahun);
                 }
 
             } else if (!month.equalsIgnoreCase("Bulan ke-")) {
                 int bulan = Integer.parseInt(month);
-                preparedStatement.setInt(2, bulan);
+                preparedStatement.setInt(3, bulan);
 
                 if (!year.equalsIgnoreCase("Tahun: ")) {
                     int tahun = Integer.parseInt(year);
-                    preparedStatement.setInt(3, tahun);
+                    preparedStatement.setInt(4, tahun);
                 }
             } else if (!year.equalsIgnoreCase("Tahun: ")) {
                 int tahun = Integer.parseInt(year);
-                preparedStatement.setInt(2, tahun);
+                preparedStatement.setInt(3, tahun);
             }
 
             var rs = preparedStatement.executeQuery();
