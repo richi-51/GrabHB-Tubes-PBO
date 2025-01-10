@@ -19,9 +19,11 @@ public class Order {
     private Date updateOrder; // jika ganti lokasi destinasi
     private PaymentMethod paymentMethod; // buat function untuk mengecek jika dia OVO
     private double price;
+    private double ratingOrder;
+    private String ulasan;
 
     // Constructor
-    public Order(int iD_order, int iD_driver, int iD_Customer, Voucher voucher, Laporan keluhan, Lokasi pickUpLoc, Lokasi destination, ServiceType serviceType, OrderStatus order_status, Date order_date, Date updateOrder, PaymentMethod paymentMethod, double price) {
+    public Order(int iD_order, int iD_driver, int iD_Customer, Voucher voucher, Laporan keluhan, Lokasi pickUpLoc, Lokasi destination, ServiceType serviceType, OrderStatus order_status, Date order_date, Date updateOrder, PaymentMethod paymentMethod, double price, double ratingOrder, String ulasan) {
         ID_order = iD_order;
         ID_driver = iD_driver;
         ID_Customer = iD_Customer;
@@ -35,6 +37,8 @@ public class Order {
         this.updateOrder = updateOrder;
         this.paymentMethod = paymentMethod;
         this.price = price;
+        this.ratingOrder = ratingOrder;
+        this.ulasan = ulasan;
     }
     // Getter and setter
     public int getID_order() {
@@ -117,8 +121,17 @@ public class Order {
     }
 
     
-    
-
-
+    public double getRatingOrder() {
+        return ratingOrder;
+    }
+    public void setRatingOrder(double ratingOrder) {
+        this.ratingOrder = ratingOrder;
+    }
+    public String getUlasan() {
+        return ulasan;
+    }
+    public void setUlasan(String ulasan) {
+        this.ulasan = ulasan;
+    }
 
 }

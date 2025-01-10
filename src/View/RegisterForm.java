@@ -5,13 +5,13 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class RegisterForm extends JFrame {
-    private JTextField nameField, usernameField, emailField, phoneNumberField, platNo;
+    private JTextField nameField, usernameField, emailField, phoneNumberField, platNo, namaKend, kapasitasKend;
     private JPasswordField passwordField;
     private JButton registerButton;
     private JCheckBox driverRegister;
     private JRadioButton carType, motorcycleType;
     private ButtonGroup vehicleType;
-    private JLabel vehicleLabel, platNoLabel;
+    private JLabel vehicleLabel, platNoLabel, namaKendLabel, kapasitasKendLabel;
 
     public RegisterForm() {
         setTitle("Register");
@@ -21,8 +21,9 @@ public class RegisterForm extends JFrame {
         setLocationRelativeTo(null);
 
         // Form panel
-        JPanel formPanel = new JPanel(new GridLayout(8, 2, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(10, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
 
         formPanel.add(new JLabel("DAFTAR SEBAGAI DRIVER?"));
         driverRegister = new JCheckBox("YES");
@@ -46,32 +47,44 @@ public class RegisterForm extends JFrame {
         phoneNumberField = new JTextField();
         formPanel.add(phoneNumberField);
 
-        formPanel.add(new JLabel("Password:"));
+        formPanel.add(new JLabel("Password:")); // kalau sempat tambahin confirm password dibawahnya
         passwordField = new JPasswordField();
         formPanel.add(passwordField);
 
         vehicleLabel = new JLabel("Jenis Kendaraan: ");
         formPanel.add(vehicleLabel);
 
-        JPanel vehicleTypePanel = new JPanel();
+        JPanel vehicleTypePanel = new JPanel(new BorderLayout());
         carType = new JRadioButton("Car");
         carType.setActionCommand("Car");
+        carType.addActionListener(e -> setCapacity1ForMotor());
 
         motorcycleType = new JRadioButton("Motorcycle");
         motorcycleType.setActionCommand("Motorcycle");
+        motorcycleType.addActionListener(e-> setCapacity1ForMotor());
 
         vehicleType = new ButtonGroup();
         vehicleType.add(carType);
         vehicleType.add(motorcycleType);
 
-        vehicleTypePanel.add(carType);
-        vehicleTypePanel.add(motorcycleType);
+        vehicleTypePanel.add(carType, BorderLayout.WEST);
+        vehicleTypePanel.add(motorcycleType, BorderLayout.EAST);
         formPanel.add(vehicleTypePanel);
+
+        namaKendLabel = new JLabel("Nama Kendaraan: ");
+        formPanel.add(namaKendLabel);
+        namaKend = new JTextField();
+        formPanel.add(namaKend);
 
         platNoLabel = new JLabel("Plat Nomor: ");
         formPanel.add(platNoLabel);
         platNo = new JTextField();
         formPanel.add(platNo);
+
+        kapasitasKendLabel = new JLabel("Kapasitas Penumpang: ");
+        formPanel.add(kapasitasKendLabel);
+        kapasitasKend = new JTextField();
+        formPanel.add(kapasitasKend);
 
         registerButton = new JButton("Register");
         add(formPanel, BorderLayout.CENTER);
@@ -89,8 +102,24 @@ public class RegisterForm extends JFrame {
         motorcycleType.setVisible(isSelected);
         vehicleLabel.setVisible(isSelected);
 
+        namaKendLabel.setVisible(isSelected);
+        namaKend.setVisible(isSelected);
+
+        kapasitasKendLabel.setVisible(isSelected);
+        kapasitasKend.setVisible(isSelected);
+
         platNo.setVisible(isSelected);
         platNoLabel.setVisible(isSelected);
+    }
+
+    private void setCapacity1ForMotor(){
+        if (motorcycleType.isSelected()) {
+            kapasitasKend.setText("1");
+            kapasitasKend.setEnabled(false);
+        }else{
+            kapasitasKend.setEnabled(true);
+
+        }
     }
 
     public String getName() {
@@ -123,6 +152,18 @@ public class RegisterForm extends JFrame {
 
     public String getPlatNo(){
         return platNo.getText();
+    }
+
+    public String getNamaKend(){
+        return namaKend.getText();
+    }
+
+    public String getKapasitasKend(){
+        return kapasitasKend.getText();
+    }
+
+    public boolean getIsDriverRegisterSelected(){
+        return driverRegister.isSelected();
     }
 
     public void addRegisterListener(ActionListener listener) {
