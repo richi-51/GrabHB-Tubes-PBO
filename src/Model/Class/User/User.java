@@ -1,3 +1,4 @@
+
 package Model.Class.User;
 import Model.Enum.UserType;
 import java.util.Date;

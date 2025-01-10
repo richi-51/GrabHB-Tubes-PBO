@@ -243,7 +243,7 @@ public class TemplateMenu extends JFrame {
         Admin admin = new Admin(3, "username_Admin", "Admin-1", "12345", "08765321879", "admin@root.com", null, null, "");
 
         Vehicle vehicle = new Car(1, "Toyota Alya", "D123XX", 3);
-        Driver driver = new Driver(1, "driver_username", "driver_name", "12345", "0814355465776", "driver_email@coba.com", null, null, "", null, null, null, vehicle, null, 0, null, StatusVerification.UNVERIFIED);
+        Driver driver = new Driver(1, "driver_username", "driver_name", "12345", "0814355465776", "driver_email@coba.com", null, null, "", null, null, null, vehicle, null, 0, null, StatusVerification.UNVERIFIED)
 
         Ovo ovo = new Ovo(2, 5000, 10);
         ArrayList<Order> orders = new ArrayList<>();
@@ -273,8 +273,9 @@ public class TemplateMenu extends JFrame {
         panel10.add(new JLabel("This is the ninth panel."));
 
         TemplateMenu tmp = new TemplateMenu();
+
         Component panels[] = {panel1, panel2, panel3, new TotalPendapatan(tmp, true), new ManageLaporan(tmp), new ManageVoucher(tmp), new HistoryOrder(tmp, false, false, true), new ManageDriver(tmp), new UpdateProfile(tmp), null};
 
-        tmp = new TemplateMenu("trial", new String[]{"Manage Customers", "Manage Drivers", "Manage Vouchers", "Panel-4", "Panel-5", "Panel-6", "Panel-7", "Panel-8", "Panel-9"}, panels, "Welcome to Admin Panel");
+        tmp = new TemplateMenu("trial", new String[]{"Manage Customers", "Accept Order", "Update My Availability", "Panel-4", "Panel-5", "Panel-6", "Panel-7", "Panel-8", "Panel-9"}, panels, "Welcome to Admin Panel");
     }
 }

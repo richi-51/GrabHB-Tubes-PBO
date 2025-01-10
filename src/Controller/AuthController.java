@@ -37,6 +37,8 @@ import View.RegisterForm;
 import View.TemplateMenu;
 import View.TotalPendapatan;
 import View.UpdateProfile;
+import View.DriverOrderPage;
+import View.UpdateAvailabilityPage;
 
 import javax.swing.*;
 
@@ -167,7 +169,7 @@ public class AuthController {
                         prepareStmtupdate.executeUpdate();
 
                         // Component panel masih harus disesuaikan dengan menu-menu driver
-                        Component panels[] = {new UpdateProfile(tmp), new ManageCustomer(tmp), new ManageDriver(tmp), new ManageVoucher(tmp), new ManageLaporan(tmp), new TotalPendapatan(tmp, false), null}; // Penambahan null diakhir untuk tombol logOut
+                        Component panels[] = {new DriverOrderPage(tmp), new UpdateAvailabilityPage(tmp), new ManageDriver(tmp), new ManageVoucher(tmp), new ManageLaporan(tmp), new TotalPendapatan(tmp, false), null}; // Penambahan null diakhir untuk tombol logOut
 
                         new TemplateMenu("Driver HomePage", new String[]{"Update Profile", "Manage Customers", "Manage Drivers", "Manage Vouchers", "Manage Reports", "View Revenue"}, panels, "Welcome to GrabHB, Drivers!");
                     }
