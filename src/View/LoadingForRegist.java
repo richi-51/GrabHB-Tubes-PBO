@@ -1,11 +1,7 @@
 package View;
-<<<<<<< HEAD
-=======
-import javax.swing.*;
 
 import Controller.AuthController;
 
->>>>>>> 1f3a179cdf68c3b63e5dbafc0d736bdb32f8bb59
 import java.awt.*;
 import javax.swing.*;
 

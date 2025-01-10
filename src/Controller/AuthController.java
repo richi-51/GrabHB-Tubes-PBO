@@ -34,6 +34,7 @@ import View.ManageLaporan;
 import View.ManageVoucher;
 import View.OrderCustomer;
 import View.RegisterForm;
+import View.ShowDriverRatingPage;
 import View.TemplateMenu;
 import View.TotalPendapatan;
 import View.UpdateProfile;
@@ -169,9 +170,9 @@ public class AuthController {
                         prepareStmtupdate.executeUpdate();
 
                         // Component panel masih harus disesuaikan dengan menu-menu driver
-                        Component panels[] = {new DriverOrderPage(tmp), new UpdateAvailabilityPage(tmp), new ManageDriver(tmp), new ManageVoucher(tmp), new ManageLaporan(tmp), new TotalPendapatan(tmp, false), null}; // Penambahan null diakhir untuk tombol logOut
+                        Component panels[] = {new UpdateProfile(tmp),new DriverOrderPage(tmp), new UpdateAvailabilityPage(tmp), new ShowDriverRatingPage(tmp), new HistoryOrder(tmp, true, false, false), new TotalPendapatan(tmp, true), null}; // Penambahan null diakhir untuk tombol logOut
 
-                        new TemplateMenu("Driver HomePage", new String[]{"Update Profile", "Manage Customers", "Manage Drivers", "Manage Vouchers", "Manage Reports", "View Revenue"}, panels, "Welcome to GrabHB, Drivers!");
+                        new TemplateMenu("Driver HomePage", new String[]{"Update Profile", "Accept Order", "Update My Availability", "My Rating", "History Accept Order", "View Revenue", ""}, panels, "Welcome to GrabHB, Drivers!");
                     }
 
                     // Close LogIn window

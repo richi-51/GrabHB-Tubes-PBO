@@ -10,22 +10,12 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import Controller.AuthController;
-import Model.Class.Order.Order;
-import Model.Class.Payment.Ovo;
 import Model.Class.Singleton.SingletonManger;
-import Model.Class.User.Admin;
-import Model.Class.User.Customer;
-import Model.Class.User.Driver;
-import Model.Class.Vehicle.Car;
-import Model.Class.Vehicle.Vehicle;
-import Model.Enum.ServiceType;
-import Model.Enum.StatusVerification;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -236,46 +226,5 @@ public class TemplateMenu extends JFrame {
     }
     public void closeFrame(){
         this.dispose();
-    }
-
-
-    public static void main(String[] args) {
-        Admin admin = new Admin(3, "username_Admin", "Admin-1", "12345", "08765321879", "admin@root.com", null, null, "");
-
-        Vehicle vehicle = new Car(1, "Toyota Alya", "D123XX", 3);
-        Driver driver = new Driver(1, "driver_username", "driver_name", "12345", "0814355465776", "driver_email@coba.com", null, null, "", null, null, null, vehicle, null, 0, null, StatusVerification.UNVERIFIED)
-
-        Ovo ovo = new Ovo(2, 5000, 10);
-        ArrayList<Order> orders = new ArrayList<>();
-        orders.add(new Order(1, 1, ERROR, null, null, null, null, null, null, null, null, null, 0, 0, null));
-        Customer customer = new Customer(2, "Customer_username", "Customer_name", "1234567", "08191234567658", "customer_email@coba.com", null, null, "", null, null, ovo, orders);
-        SingletonManger.getInstance().setLoggedInUser(customer);
-
-        JPanel panel1 = new JPanel();
-        panel1.add(new JLabel("This is the Manage Customers panel."));
-        JPanel panel2 = new JPanel();
-        panel2.add(new JLabel("This is the Manage Drivers panel."));
-        JPanel panel3 = new JPanel();
-        panel3.add(new JLabel("This is the Manage Vouchers panel."));
-        JPanel panel4 = new JPanel();
-        panel4.add(new JLabel("This is the fourth panel."));
-        JPanel panel5 = new JPanel();
-        panel5.add(new JLabel("This is the fifth panel."));
-        JPanel panel6 = new JPanel();
-        panel6.add(new JLabel("This is the sixth panel."));
-        JPanel panel7 = new JPanel();
-        panel7.add(new JLabel("This is the seventh panel."));
-        JPanel panel8 = new JPanel();
-        panel8.add(new JLabel("This is the eighth panel."));
-        JPanel panel9 = new JPanel();
-        panel9.add(new JLabel("This is the ninth panel."));
-        JPanel panel10 = new JPanel();
-        panel10.add(new JLabel("This is the ninth panel."));
-
-        TemplateMenu tmp = new TemplateMenu();
-
-        Component panels[] = {panel1, panel2, panel3, new TotalPendapatan(tmp, true), new ManageLaporan(tmp), new ManageVoucher(tmp), new HistoryOrder(tmp, false, false, true), new ManageDriver(tmp), new UpdateProfile(tmp), null};
-
-        tmp = new TemplateMenu("trial", new String[]{"Manage Customers", "Accept Order", "Update My Availability", "Panel-4", "Panel-5", "Panel-6", "Panel-7", "Panel-8", "Panel-9"}, panels, "Welcome to Admin Panel");
     }
 }

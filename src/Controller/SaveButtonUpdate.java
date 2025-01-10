@@ -53,12 +53,11 @@ public class SaveButtonUpdate {
                 if (rowTlpAffected > 0 && rowUserAffected > 0 && rowVehicleAffected > 0) {
                     JOptionPane.showMessageDialog(null, "Data berhasil disimpan", "Update User Profile", JOptionPane.INFORMATION_MESSAGE);
                 }
+            }else{
+                if (rowTlpAffected > 0 && rowUserAffected > 0) {
+                    JOptionPane.showMessageDialog(null, "Data berhasil disimpan", "Update User Profile", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
-
-            if (rowTlpAffected > 0 && rowUserAffected > 0) {
-                JOptionPane.showMessageDialog(null, "Data berhasil disimpan", "Update User Profile", JOptionPane.INFORMATION_MESSAGE);
-            }
-
 
         } catch (SQLException ex) {
             ex.printStackTrace();
