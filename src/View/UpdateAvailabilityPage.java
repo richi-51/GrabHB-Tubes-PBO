@@ -8,6 +8,7 @@ public class UpdateAvailabilityPage extends JPanel {
     private JButton changeAvailability; // Tombol untuk mengubah status
     private JTextField descAvailability; // Menampilkan status availability
     private JLabel statusLabel;
+    private JLabel statusDescLabel;
 
     public UpdateAvailabilityPage(TemplateMenu tmp) {
         setSize(tmp.getWidthMenuPanels(), tmp.getHeightMenuPanels());
@@ -18,7 +19,14 @@ public class UpdateAvailabilityPage extends JPanel {
         descAvailability = new JTextField("Online");
         descAvailability.setEditable(false); // Hanya untuk tampilan, tidak bisa diinput
         changeAvailability = new JButton("Offline");
-        JLabel statusDescLabel = new JLabel("\u25CF Anda kembali aktif"); // Simbol bulatan dan deskripsi
+
+        // Mengatur simbol bulatan hijau menggunakan HTML
+        statusDescLabel = new JLabel("<html><span style='color:green;'>&#9679;</span> Anda kembali aktif</html>");
+        statusDescLabel.setOpaque(true);
+        statusDescLabel.setBackground(Color.WHITE);
+        statusDescLabel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        statusDescLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        statusDescLabel.setVerticalAlignment(SwingConstants.CENTER);
 
         // Pengaturan GridBagConstraints
         GridBagConstraints c = new GridBagConstraints();
@@ -44,6 +52,9 @@ public class UpdateAvailabilityPage extends JPanel {
         c.gridy = 2;
         c.gridwidth = 2;
         add(changeAvailability, c);
+
+        // Menambahkan ActionListener untuk tombol
+        changeAvailability.addActionListener(e -> toggleAvailability());
     }
 
     // Mengatur listener untuk tombol
@@ -53,7 +64,7 @@ public class UpdateAvailabilityPage extends JPanel {
         } else {
             changeAvailability.addActionListener(listener);
             System.out.println("Listener added to changeAvailability button."); // Debug log
-        };
+        }
     }
 
     // Mengatur teks pada JTextField (status availability)
@@ -69,4 +80,25 @@ public class UpdateAvailabilityPage extends JPanel {
     public String getAvailabilityStatus() {
         return descAvailability.getText();
     }
+    public String getStatusDesc(){
+        return statusDescLabel.getText();
+    }
+
+    public void setStatusDesc(String label){
+        statusDescLabel.setText(label);
+    }
+
+    // Metode untuk mengganti status dan label tombol
+    private void toggleAvailability() {
+        if (getAvailabilityStatus().equals("Online")) {
+            setAvailabilityStatus("Offline");
+            setButtonLabel("Online");
+            setStatusDesc("<html><span style='color:red;'>&#9679;</span> Anda sedang tidak aktif</html>f");
+        } else {
+            setAvailabilityStatus("Online");
+            setButtonLabel("Offline");
+            setStatusDesc("<html><span style='color:green;'>&#9679;</span> Anda kembali aktif</html>");
+        }
+    }
+
 }

@@ -1,9 +1,10 @@
 package Controller;
 
 import Model.Class.Singleton.SingletonManger;
-import Model.Class.State.DriverContext;
 import Model.Class.User.Driver;
+import Model.Enum.DriverStatus;
 import View.UpdateAvailabilityPage;
+import Model.Class.State.DriverContext;
 import Model.Class.Db.DatabaseHandler;
 
 import javax.swing.*;
@@ -17,59 +18,63 @@ public class UpdateAvailability {
     private UpdateAvailabilityPage updateAvailabilityView;
     private DriverContext driverContext;
 
+
     public UpdateAvailability(UpdateAvailabilityPage updateAvailabilityView) {
         this.updateAvailabilityView = updateAvailabilityView;
-
-        // Validasi pengguna
-        Driver loggedInUser = (Driver)(SingletonManger.getInstance().getLoggedInUser());
-        if (loggedInUser == null) {
-            JOptionPane.showMessageDialog(updateAvailabilityView, "User tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        System.out.println(loggedInUser.getID_Driver());
-        // Inisialisasi Context
-        driverContext = new DriverContext(loggedInUser);
-
-        // Set initial UI state
+        driverContext = new DriverContext((Driver) SingletonManger.getInstance().getLoggedInUser());
         updateAvailabilityView.setAvailabilityStatus(driverContext.getState().getStatus());
         updateAvailabilityView.setButtonLabel(driverContext.getState().getButtonLabel());
-
-        // Add listener
         this.updateAvailabilityView.addChangeAvailabilityListener(new ChangeAvailabilityAction());
     }
 
-    private class ChangeAvailabilityAction implements ActionListener {
+    private class ChangeAvailabilityAction implements ActionListener { 
         @Override
         public void actionPerformed(ActionEvent e) {
-            try (Connection conn = DatabaseHandler.connect()) {
-                if (conn == null) {
-                    JOptionPane.showMessageDialog(updateAvailabilityView, "Koneksi ke database gagal!", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                System.out.println(driverContext.getDriver().getIdUser());
-                // Change state
-                driverContext.changeAvailability();
+            Driver loggedInUser = (Driver)(SingletonManger.getInstance().getLoggedInUser());
+    
+            if (loggedInUser != null) {
+                int driverId = loggedInUser.getIdUser();
+            
+                try (Connection conn = DatabaseHandler.connect()) {
+                    if (conn == null) {
+                        throw new SQLException("Koneksi ke database gagal!");
+                    }
+                    driverContext.changeAvailability();
 
-                // Update database
-                String query = "UPDATE users SET availabilityDriver = ? WHERE ID_User = ?";
-                PreparedStatement statement = conn.prepareStatement(query);
-                statement.setString(1, driverContext.getState().getStatus());
-                statement.setInt(2, driverContext.getDriver().getIdUser());
+                    String newAvailability = driverContext.getState().getStatus();
+                    if (newAvailability.equalsIgnoreCase("Offline")) {
+                        newAvailability = "Online";
+                        loggedInUser.setAvailability(DriverStatus.ONLINE);
+                    } else if (newAvailability.equalsIgnoreCase("Online")) {
+                        newAvailability = "Offline";
+                        loggedInUser.setAvailability(DriverStatus.OFFLINE);
+                    }
 
-                int rowsUpdated = statement.executeUpdate();
-                if (rowsUpdated > 0) {
-                    JOptionPane.showMessageDialog(updateAvailabilityView, "Status berhasil diubah.");
-                    updateAvailabilityView.setAvailabilityStatus(driverContext.getState().getStatus());
+                    updateAvailabilityView.setAvailabilityStatus(newAvailability);
                     updateAvailabilityView.setButtonLabel(driverContext.getState().getButtonLabel());
-                } else {
-                    JOptionPane.showMessageDialog(updateAvailabilityView, "Gagal mengubah status.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
 
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(updateAvailabilityView, "Error saat mengubah status: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    String query = "UPDATE users SET availabilityDriver = ? WHERE ID_User = ?";
+                    PreparedStatement statement = conn.prepareStatement(query);
+                    statement.setString(1, newAvailability);
+                    statement.setInt(2, driverId);
+    
+                    int rowsUpdated = statement.executeUpdate();
+                    if (rowsUpdated > 0) {
+                        JOptionPane.showMessageDialog(updateAvailabilityView, "Status berhasil diubah.");
+                    } else {
+                        JOptionPane.showMessageDialog(updateAvailabilityView, "Gagal mengubah status.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(updateAvailabilityView, 
+                            "Error saat mengubah status: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(updateAvailabilityView, 
+                        "User tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
+    
 }

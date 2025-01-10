@@ -31,9 +31,7 @@ public class ConfirmOrder {
                             JOptionPane.showMessageDialog(null, "Saldo Anda tidak mencukupi!", "Error", JOptionPane.ERROR_MESSAGE);
                             return 0;
                         }
-
                         saldo -= totalPrice;
-                        
                     }
 
                     String updateOrderQuery = "UPDATE `order` SET order_status = 'On_Process', ID_Driver = ? WHERE ID_Order = ?";
