@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import Controller.Encryptor;
 import Controller.SaveButtonUpdate;
 import Model.Class.Singleton.SingletonManger;
 import Model.Class.User.Driver;
@@ -186,7 +187,12 @@ public class UpdateProfile extends JPanel {
 
         saveButton.setBounds(xSaveButton,ySaveButton, saveButtonWidth, saveButtonHeight);
 
-        saveButton.addActionListener(e -> new SaveButtonUpdate(nama, username, email, phoneNum, password, pathFotoProfile, isDriver, jnsKend, namaKendaraan, platNomor, kapasitasKendaraan));
+        saveButton.addActionListener(e -> {
+            final String jenisKend = carType.isSelected() ? carType.getActionCommand() : motorcycleType.getActionCommand();
+
+            new SaveButtonUpdate(nameField.getText(), usernameField.getText(), emailField.getText(), phoneNumberField.getText(), Encryptor.hash(passwordField.getText()), pathFotoProfile, isDriver, jenisKend, namaKend.getText(), platNo.getText(), Integer.parseInt(kapasitasKend.getText()));
+        
+        });
         
         panelData.add(formPanel);
         panelData.add(saveButton);

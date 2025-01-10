@@ -2,6 +2,10 @@ package View;
 
 import java.awt.*;
 import javax.swing.*;
+
+import Model.Class.Singleton.SingletonManger;
+import Model.Class.User.Driver;
+
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -39,19 +43,16 @@ class CircularImageLabel extends JLabel {
     }
 }
 
-public class ShowDriverRatingPage extends JFrame {
-    private JLabel driverUserName, rate, profileLabel, star, reviews;
+public class ShowDriverRatingPage extends JPanel {
+    private JLabel driverUserName, rate, star, reviews;
     private JPanel profilePanel;
-    private String profilePic = "src/Images/user.png";
-    private String starPic = "src/Images/star.png"; // Pastikan file star.png ada di folder ini
-    private final int WIDTH_FRAME = 900;
-    private final int HEIGHT_FRAME = 600;
+    private String profilePic = "src/Asset/user.png";
+    private String starPic = "src/Asset/star.png"; // Pastikan file star.png ada di folder ini
 
-    public ShowDriverRatingPage() {
-        setTitle("Show Driver Rating");
-        setSize(350, 250);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+    public ShowDriverRatingPage(TemplateMenu tmp) {
+        setSize(tmp.getWidthMenuPanels(), tmp.getWidthMenuPanels());
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel driverRatePanel = new JPanel();
         driverRatePanel.setLayout(new BoxLayout(driverRatePanel, BoxLayout.Y_AXIS));
@@ -60,7 +61,6 @@ public class ShowDriverRatingPage extends JFrame {
 
         profilePanel = new JPanel();
 
-        profileLabel = new JLabel();
         CircularImageLabel profileLabel = new CircularImageLabel(profilePic);
         profileLabel.setPreferredSize(new Dimension(120, 120));
         profilePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -77,7 +77,7 @@ public class ShowDriverRatingPage extends JFrame {
         star = new JLabel();
         tampilkanGambar(star, starPic, 29, 29);
 
-        rate = new JLabel();
+        rate = new JLabel("Rating: " + ((Driver)(SingletonManger.getInstance().getLoggedInUser())).getRating());
         rate.setFont(new Font("Arial", Font.PLAIN, 28));
         reviews = new JLabel("");
         reviews.setFont(new Font("Arial", Font.PLAIN, 28));
@@ -113,9 +113,5 @@ public class ShowDriverRatingPage extends JFrame {
 
     public void setReviews(String reviewText){
         reviews.setText(reviewText);
-    }
-
-    public static void main(String[] args) {
-        new ShowDriverRatingPage();
     }
 }

@@ -28,10 +28,7 @@ import Model.Class.Order.GrabCar;
 import Model.Class.Order.Order;
 import Model.Class.User.Driver;
 import Model.Class.Vehicle.Car;
-<<<<<<< HEAD
-=======
 import Model.Enum.OrderStatus;
->>>>>>> 1f3a179cdf68c3b63e5dbafc0d736bdb32f8bb59
 
 public class HistoryOrder extends JPanel{
     private JPanel panelSorting;
@@ -126,7 +123,11 @@ public class HistoryOrder extends JPanel{
         JButton reportButton[] = new JButton[orderSorted.size()];
 
         for (int i = 0; i < orderSorted.size(); i++) {
-            panelOrders[i] = new JPanel(new GridLayout(12,1));
+            if((!isAdmin && !isDriver) || isDriver){
+                panelOrders[i] = new JPanel(new GridLayout(12,1));
+            }else{
+                panelOrders[i] = new JPanel(new GridLayout(11,1));
+            }
             panelOrders[i].setPreferredSize(new Dimension(WIDTH_PANEL - 30, 200));
             panelOrders[i].setBorder(BorderFactory.createLineBorder(Color.black, 2, true));
 
@@ -150,40 +151,35 @@ public class HistoryOrder extends JPanel{
             panelOrders[i].add(new JLabel("Potongan Voucher: " + orderSorted.get(i).getVoucher().getJumlahPotongan()));
 
             
-<<<<<<< HEAD
-            final int index = i;
-            panelButton[i] = new JPanel(new GridLayout(1, 2, 15,15));
-
-            ratingButton[i] = new JButton("Rating This Order");
-            ratingButton[i].addActionListener(e-> showRatingDriver(new HistoryOrderController().getDetailDriver(orderSorted.get(index).getID_driver()), orderSorted.get(index).getID_order()));
-
-            reportButton[i] = new JButton("Report This Order");
-            reportButton[i].addActionListener(e-> showReportOrder(orderSorted.get(index).getID_order()));
-            
-            panelButton[i].add(ratingButton[i]);
-            panelButton[i].add(reportButton[i]);
-            
-            panelOrders[i].add(panelButton[i]);
-=======
-            
             
             final int index = i;
-            panelButton[i] = new JPanel(new GridLayout(1, 2, 15,15));
-            
-            if(orderSorted.get(i).getOrder_status() == OrderStatus.COMPLETE){
-                ratingButton[i] = new JButton("Rating This Order");
-                ratingButton[i].addActionListener(e-> showRatingDriver(new HistoryOrderController().getDetailDriver(orderSorted.get(index).getID_driver()), orderSorted.get(index).getID_order()));
-    
-                reportButton[i] = new JButton("Report This Order");
-                reportButton[i].addActionListener(e-> showReportOrder(orderSorted.get(index).getID_order()));
+            if (!isDriver && !isAdmin) {
+                panelButton[i] = new JPanel(new GridLayout(1, 2, 15,15));
                 
-                panelButton[i].add(ratingButton[i]);
-                panelButton[i].add(reportButton[i]);
+                if(orderSorted.get(i).getOrder_status() == OrderStatus.COMPLETE){
+                    ratingButton[i] = new JButton("Rating This Order");
+                    ratingButton[i].addActionListener(e-> showRatingDriver(new HistoryOrderController().getDetailDriver(orderSorted.get(index).getID_driver()), orderSorted.get(index).getID_order()));
+        
+                    reportButton[i] = new JButton("Report This Order");
+                    reportButton[i].addActionListener(e-> showReportOrder(orderSorted.get(index).getID_order()));
+                    
+                    panelButton[i].add(ratingButton[i]);
+                    panelButton[i].add(reportButton[i]);
+                    
+                    panelOrders[i].add(panelButton[i]);
+                }
+            }else if (isDriver) {
+                panelButton[i] = new JPanel(new FlowLayout(FlowLayout.CENTER, 15,15));
                 
-                panelOrders[i].add(panelButton[i]);
+                if(orderSorted.get(i).getOrder_status() == OrderStatus.COMPLETE){
+                    reportButton[i] = new JButton("Report This Order");
+                    reportButton[i].addActionListener(e-> showReportOrder(orderSorted.get(index).getID_order()));
+                    
+                    panelButton[i].add(reportButton[i]);
+                    
+                    panelOrders[i].add(panelButton[i]);
+                }
             }
-            
->>>>>>> 1f3a179cdf68c3b63e5dbafc0d736bdb32f8bb59
             containerPanel.add(panelOrders[i]);
 
         }

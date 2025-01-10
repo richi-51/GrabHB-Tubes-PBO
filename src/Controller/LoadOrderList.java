@@ -227,9 +227,7 @@ public class LoadOrderList {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(driverOrderPage, "Error loading orders", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }else {
-            JOptionPane.showMessageDialog(driverOrderPage, "User tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
-        }  
+        }
         return orders; 
     }
 }
