@@ -31,9 +31,7 @@ import Model.Enum.ServiceType;
 
 public class OrderCustomer extends JPanel {
     private ArrayList<Driver> drivers = new ArrayList<>();
-    private JButton block_UnblockButton[];
-    private JButton verifyButton[];
-    private JPanel panelSorting;
+
     private JComboBox<String> custVouchers, pickUpLoc, destinationLoc, typeOrder, paymentMethod;
     JLabel priceLabel;
 
@@ -118,8 +116,10 @@ public class OrderCustomer extends JPanel {
         containerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         // containerPanel.add(panelSorting);
-
-        double saldoOvo = ((Customer) (SingletonManger.getInstance().getLoggedInUser())).getOvoE_money().getSaldo();
+        double saldoOvo = 0;
+        if (((Customer) (SingletonManger.getInstance().getLoggedInUser())).getOvoE_money() != null) {
+            saldoOvo = ((Customer) (SingletonManger.getInstance().getLoggedInUser())).getOvoE_money().getSaldo();
+        }
 
         containerPanel.add(new JLabel("Pick Up Location: "));
         pickUpLoc = new JComboBox<>(new OrderCustomerController().getAllLocation());
@@ -164,9 +164,11 @@ public class OrderCustomer extends JPanel {
 
         containerPanel.add(new JLabel("Payment method:"));
         paymentMethod = new JComboBox<>(new String[] { "", "Cash", "Ovo" });
+        
+        final double saldo = saldoOvo;
         paymentMethod.addActionListener(e -> {
             if (paymentMethod.getSelectedItem().toString().equalsIgnoreCase("Ovo")) {
-                if (saldoOvo < price) {
+                if (saldo < price) {
                     JOptionPane.showMessageDialog(null, "Maaf saldo OVO Anda tidak cukup", "Insufficient Balance",
                             JOptionPane.WARNING_MESSAGE);
                     paymentMethod.setSelectedItem("Cash");
@@ -275,5 +277,14 @@ public class OrderCustomer extends JPanel {
         frame.add(addVoucherForCust);
 
         frame.setVisible(true);
+    }
+
+    // Getter and Setter
+    public ArrayList<Driver> getDrivers() {
+        return drivers;
+    }
+
+    public void setDrivers(ArrayList<Driver> drivers) {
+        this.drivers = drivers;
     }
 }
