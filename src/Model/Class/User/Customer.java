@@ -11,7 +11,6 @@ import Model.Class.Payment.Ovo;
 public class Customer extends User {
     private StatusAcc statusAcc;
     private Date createdAccAt;
-
     private Ovo ovoE_money;
     private ArrayList<Order> order = new ArrayList<>();
 
