@@ -38,8 +38,7 @@ public class DriverOrderPage extends JPanel {
 
         LoadOrderList loadOrderList = new LoadOrderList(this);
         orders = loadOrderList.loadOrders();
-        System.out.println("Jumlah pesanan: " + orders.size());
-
+        
         Order[] orderArray = orders.toArray(new Order[0]);
         orderList = new JList<>(orderArray);
         orderList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
