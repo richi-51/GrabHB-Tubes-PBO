@@ -42,9 +42,12 @@ public class UpdateProfile extends JPanel {
         pathFotoProfile = templateMenu.getAbsolutePathFoto("../GrabHB-Tubes-PBO/src/Asset/Profile Picture Default.png");
 
         // ubah profile pic jika sudah di-set sebelumnya
-        String path = templateMenu.getAbsolutePathFoto(user.getProfilePicPath());
-        if (!path.equalsIgnoreCase("")) {
-            pathFotoProfile = path;
+        System.out.println(user.getProfilePicPath());
+        if (user.getProfilePicPath() != null) {
+            String path = templateMenu.getAbsolutePathFoto(user.getProfilePicPath());
+            if (!path.equalsIgnoreCase("")) {
+                pathFotoProfile = path;
+            } 
         }
 
         if (user instanceof Driver) {

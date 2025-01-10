@@ -32,6 +32,7 @@ import View.ManageCustomer;
 import View.ManageDriver;
 import View.ManageLaporan;
 import View.ManageVoucher;
+import View.OrderCustomer;
 import View.RegisterForm;
 import View.TemplateMenu;
 import View.TotalPendapatan;
@@ -87,6 +88,8 @@ public class AuthController {
             String usernameEmail = loginView.getUsernameEmail();
             String password = loginView.getPassword();
 
+            String encryptPass = Encryptor.hash(password);
+
             try (Connection conn = DatabaseHandler.connect()) {
                 String queryUser = "";
                 if (usernameEmail.contains("@")) {
@@ -98,7 +101,7 @@ public class AuthController {
                 // Periksa apakah user ada di tabel Users
                 var preparedStatement = conn.prepareStatement(queryUser);
                 preparedStatement.setString(1, usernameEmail);
-                preparedStatement.setString(2, password);
+                preparedStatement.setString(2, encryptPass);
 
                 var resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
@@ -133,9 +136,9 @@ public class AuthController {
                                 getOrderUser(userId, true)));
 
                         // Component panel masih harus disesuaikan dengan menu-menu customer
-                        Component panels[] = {new UpdateProfile(tmp), new ManageCustomer(tmp), new ManageDriver(tmp), new ManageVoucher(tmp), new ManageLaporan(tmp), new HistoryOrder(tmp, false, false, true), new TotalPendapatan(tmp, false), null}; // Penambahan null diakhir untuk tombol logOut
+                        Component panels[] = {new UpdateProfile(tmp), new OrderCustomer(tmp, "GrabBike", new String[]{"", "Hemat", "Reguler", "XL", "Electric"}, ServiceType.GRABBIKE), new OrderCustomer(tmp, "GrabCar", new String[]{"", "Hemat", "Reguler", "XL", "Fast_Track"}, ServiceType.GRABCAR), new HistoryOrder(tmp, false, false, true), null}; // Penambahan null diakhir untuk tombol logOut
 
-                        new TemplateMenu("Customer HomePage", new String[]{"Update Profile", "Manage Customers", "Manage Drivers", "Manage Vouchers", "Manage Reports", "History Orders", "View Revenue", ""}, panels, "Welcome to GrabHB!");
+                        new TemplateMenu("Customer HomePage", new String[]{"Update Profile", "Order GrabBike", "Order GrabCar", "History Orders", ""}, panels, "Welcome to GrabHB!");
 
                     } else if ("Driver".equalsIgnoreCase(userType)) {
                         ArrayList<Order> ordersDriver = getOrderUser(userId, false);
@@ -402,6 +405,8 @@ public class AuthController {
             String statusAcc = "Unblock";
             int rowsInserted = 0;
 
+            String encryptPass = Encryptor.hash(password);
+
             try (Connection conn = DatabaseHandler.connect()) {
                 // Insert data vehicle
                 if (registerView.getIsDriverRegisterSelected()) {
@@ -444,7 +449,7 @@ public class AuthController {
                     preparedStatement.setInt(1, idVehicle);
                     preparedStatement.setString(2, name);
                     preparedStatement.setString(3, username);
-                    preparedStatement.setString(4, password);
+                    preparedStatement.setString(4, encryptPass);
                     preparedStatement.setString(5, email);
                     preparedStatement.setString(6, userType);
                     preparedStatement.setString(7, statusAcc);
@@ -477,7 +482,7 @@ public class AuthController {
                     var preparedStatement = conn.prepareStatement(query);
                     preparedStatement.setString(1, name);
                     preparedStatement.setString(2, username);
-                    preparedStatement.setString(3, password);
+                    preparedStatement.setString(3, encryptPass);
                     preparedStatement.setString(4, email);
                     preparedStatement.setString(5, userType);
                     preparedStatement.setString(6, statusAcc);

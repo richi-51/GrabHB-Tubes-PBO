@@ -33,14 +33,6 @@ import Model.Enum.TypeBikeOrder;
 import Model.Enum.TypeCarOrder;
 import Model.Enum.UserType;
 
-import Model.Class.Order.Order;
-import Model.Class.Order.Voucher;
-import Model.Class.Singleton.SingletonManger;
-import Model.Enum.OrderStatus;
-import Model.Enum.PaymentMethod;
-import Model.Enum.ServiceType;
-import Model.Enum.TypeBikeOrder;
-import Model.Enum.TypeCarOrder;
 
 public class HistoryOrderController {
     public String[] getDayOfOrder(boolean isDriver, boolean isCustomer) {
