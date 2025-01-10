@@ -1,50 +1,63 @@
 package View;
 
-import Controller.DriverOrderController;
+import Controller.CompleteOrder;
+import Controller.ConfirmOrder;
+import Controller.LoadOrderList;
+import Model.Class.Order.Order;
 import Model.Class.Singleton.SingletonManger;
 import Model.Class.User.Driver;
 import Model.Enum.OrderStatus;
-import Model.Enum.PaymentMethod;
-import Model.Enum.ServiceType;
-import Model.Class.Order.Order;
+import Model.Class.Db.DatabaseHandler;
+import Model.Enum.DriverStatus;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class DriverOrderPage implements DriverOrderController.OrderView {
+public class DriverOrderPage extends JPanel {
 
-    private static final int FRAME_WIDTH = 600;
-    private static final int FRAME_HEIGHT = 400;
+    private final int FRAME_WIDTH;
+    private final int FRAME_HEIGHT;
 
-    private DriverOrderController controller;
     private JList<Order> orderList;
     private JTextArea orderDetailsArea;
+    private JButton confirmButton, completeButton;
+    private List<Order> orders;
+    private double saldo = ((Driver)(SingletonManger.getInstance().getLoggedInUser())).getOvoDriver().getSaldo();
 
-    public DriverOrderPage() {
-        controller = new DriverOrderController(this);
-        showOrderPage();
-    }
+    public DriverOrderPage(TemplateMenu tmp) {
 
-    private void showOrderPage() {
-        Driver loggedInUser = (Driver)(SingletonManger.getInstance().getLoggedInUser());
-        
-        JFrame frame = createFrame();
-        frame.setLayout(new BorderLayout());
+        this.FRAME_WIDTH = tmp.getWidthMenuPanels();
+        this.FRAME_HEIGHT = tmp.getHeightMenuPanels();
+
+        Driver loggedInUser = (Driver) SingletonManger.getInstance().getLoggedInUser();
+
+        setUpFrame();
 
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BorderLayout());
         leftPanel.setPreferredSize(new Dimension(200, FRAME_HEIGHT));
 
-        orderList = new JList<>();
+        LoadOrderList loadOrderList = new LoadOrderList(this);
+        orders = loadOrderList.loadOrders();
+        System.out.println("Jumlah pesanan: " + orders.size());
+
+        Order[] orderArray = orders.toArray(new Order[0]);
+        orderList = new JList<>(orderArray);
         orderList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         orderList.setCellRenderer(new OrderListCellRenderer());
         orderList.addListSelectionListener(e -> displayOrderDetails(orderList.getSelectedValue()));
         JScrollPane listScrollPane = new JScrollPane(orderList);
         leftPanel.add(listScrollPane, BorderLayout.CENTER);
 
-        frame.add(leftPanel, BorderLayout.WEST);
+        JLabel saldoLabel = new JLabel("Saldo Ovo: " + saldo);
+        leftPanel.add(saldoLabel, BorderLayout.SOUTH);
+
+        add(leftPanel, BorderLayout.WEST);
 
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BorderLayout());
@@ -54,116 +67,102 @@ public class DriverOrderPage implements DriverOrderController.OrderView {
         JScrollPane detailsScrollPane = new JScrollPane(orderDetailsArea);
         rightPanel.add(detailsScrollPane, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
-
-        JButton confirmButton = new JButton("Confirm Order");
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+        
+        confirmButton = new JButton("Confirm Order");
         confirmButton.addActionListener(e -> {
             try {
-                double driverSaldo = loggedInUser.getOvoE_money().getSaldo();
-                double driverCoins = loggedInUser.getOvoE_money().getCoins();
+                Order selectedOrder = orderList.getSelectedValue();
+                if (selectedOrder != null) {
+                    ConfirmOrder order = new ConfirmOrder();
+                    double result = order.confirmOrder(selectedOrder.getID_order(), loggedInUser, saldo);
 
-                Order currentOrder = controller.getCurrentOrder(loggedInUser.getID_Driver());
-                if (currentOrder == null) {
-                    Order selectedOrder = orderList.getSelectedValue();
-                    if (selectedOrder != null) {
-                        controller.confirmOrder(selectedOrder.getID_order());
-                        selectedOrder.setID_driver(loggedInUser.getID_Driver());
-                        selectedOrder.setOrder_status(OrderStatus.ON_PROCESS);
-                        frame.dispose();
-                        new DriverPage();
-
-                        // if (displayConfirm("Saldo: " + driverSaldo + "\nKoin: " + driverCoins + "\n\nOrder Dikonfirmasi??") == JOptionPane.YES_OPTION) {
-                        //     controller.confirmOrder(selectedOrder.getID_order());
-                        //     selectedOrder.setID_driver(loggedInUser.getID_Driver());
-                        //     selectedOrder.setOrder_status(OrderStatus.ON_PROCESS);
-                        //     frame.dispose();
-                        //     new DriverPage();
-                        // }else{
-                        //     displayError("Order gagal di ambil");
-                        //     showOrderPage();
-                        // }
+                    if (result > 0) {
+                        confirmOrder(selectedOrder, loggedInUser);
+                        saldo = result;
                     }
-                }
-                else {
-                    JOptionPane.showMessageDialog(null, "There's Ongoing Order", "Error", JOptionPane.ERROR_MESSAGE);
+                    saldoLabel.setText("Saldo Ovo: " + saldo);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Please select an order to confirm.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                displayError("Error loading current order: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-
         });
+
+        completeButton = new JButton("Complete Order");
+        completeButton.addActionListener(e ->{
+            try {
+                Order selectedOrder = orderList.getSelectedValue();
+                if (selectedOrder != null) {
+                    CompleteOrder order = new CompleteOrder();
+                    order.completeOrder(selectedOrder.getID_order(), loggedInUser, null);
+                    completeOrder(selectedOrder);
+                    refreshOrderList();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Please select an order to confirm.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         buttonPanel.add(confirmButton);
-
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> {
-            frame.dispose();
-            new DriverPage(); // balik lagi jadi Welcome Driver
-        });
-        buttonPanel.add(backButton);
-
+        buttonPanel.add(completeButton);
         rightPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        frame.add(rightPanel, BorderLayout.CENTER);
+        add(rightPanel, BorderLayout.CENTER);
 
-        frame.setVisible(true);
-
-        controller.loadOrders();
+        setVisible(true);
     }
 
-    private JFrame createFrame() {
+    private void setUpFrame() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
 
-        int screenWidth = screenSize.width;
-        int screenHeight = screenSize.height;
+        int startX = screenSize.width / 2 - (FRAME_WIDTH / 2);
+        int startY = screenSize.height / 2 - (FRAME_HEIGHT / 2);
 
-        int start_x = screenWidth / 2 - (FRAME_WIDTH / 2);
-        int start_y = screenHeight / 2 - (FRAME_HEIGHT / 2);
-
-        JFrame frame = new JFrame("View Orders");
-        frame.setBounds(start_x, start_y, FRAME_WIDTH, FRAME_HEIGHT);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        return frame;
+        setBounds(startX, startY, FRAME_WIDTH, FRAME_HEIGHT);
+        setLayout(new BorderLayout());
     }
 
     private void displayOrderDetails(Order order) {
         if (order != null) {
-            String serviceType = (order.getServiceType() == ServiceType.GRABBIKE)?"GrabBike":"GrabCar";
             orderDetailsArea.setText(
-                "Service Type: " + serviceType  + "\n"
-                + "Price: Rp" + order.getPrice() + "\n"
-                + "Order Date: " + order.getOrder_date() + "\n"
-                + "Order Status: " + order.getOrder_status()
+                "Service Type: " + order.getServiceType() + "\n" +
+                "Price: Rp" + order.getPrice() + "\n" +
+                "Order Date: " + order.getOrder_date() + "\n" +
+                "Order Status: " + order.getOrder_status()
             );
         } else {
             orderDetailsArea.setText("");
         }
     }
 
-    @Override
-    public void displayOrders(List<Order> orders) {
-        DefaultListModel<Order> listModel = new DefaultListModel<>();
-        for (Order order : orders) {
-            listModel.addElement(order);
+    private void refreshOrderList() {
+        LoadOrderList loadOrderList = new LoadOrderList(this);
+        orders = loadOrderList.loadOrders();
+        Order[] orderArray = orders.toArray(new Order[0]);
+        orderList.setListData(orderArray);
+        orderDetailsArea.setText("");
+    }
+
+    private void confirmOrder(Order selectedOrder, Driver loggedInUser) throws SQLException {
+        if (selectedOrder != null) {
+            selectedOrder.setID_driver(loggedInUser.getID_Driver());
+            selectedOrder.setOrder_status(OrderStatus.ON_PROCESS);            
+            JOptionPane.showMessageDialog(this, "Order confirmed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         }
-        orderList.setModel(listModel);
     }
 
-    @Override
-    public void displayError(String message) {
-        JOptionPane.showMessageDialog(null, message);
-    }
-
-    @Override
-    public void displayIncomes(String incomes) {
-        
-    }
-
-    @Override
-    public int displayConfirm(String question){
-        return JOptionPane.showConfirmDialog(null, question, "Confirm", JOptionPane.YES_NO_OPTION);
+    private void completeOrder(Order selectedOrder) throws SQLException {
+        if (selectedOrder != null) {
+            selectedOrder.setOrder_status(OrderStatus.COMPLETE);            
+            JOptionPane.showMessageDialog(this, "Order completed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private static class OrderListCellRenderer extends DefaultListCellRenderer {
@@ -172,10 +171,11 @@ public class DriverOrderPage implements DriverOrderController.OrderView {
             JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (value instanceof Order) {
                 Order order = (Order) value;
-                String displayText = String.format("%s - $%.2f", order.getServiceType(), order.getPrice());
+                String displayText = String.format("%s - Rp%.2f", order.getServiceType(), order.getPrice());
                 label.setText(displayText);
             }
             return label;
         }
     }
+
 }

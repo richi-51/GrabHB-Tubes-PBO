@@ -4,17 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class UpdateAvailabilityPage extends JFrame {
+public class UpdateAvailabilityPage extends JPanel {
     private JButton changeAvailability; // Tombol untuk mengubah status
     private JTextField descAvailability; // Menampilkan status availability
     private JLabel statusLabel;
 
-    public UpdateAvailabilityPage() {
-        setTitle("Update Availability");
-        setSize(350, 250);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    public UpdateAvailabilityPage(TemplateMenu tmp) {
+        setSize(tmp.getWidthMenuPanels(), tmp.getHeightMenuPanels());
         setLayout(new GridBagLayout()); // Menggunakan GridBagLayout
-        setLocationRelativeTo(null);
 
         // Inisialisasi komponen
         statusLabel = new JLabel("Your Status:");
@@ -51,7 +48,12 @@ public class UpdateAvailabilityPage extends JFrame {
 
     // Mengatur listener untuk tombol
     public void addChangeAvailabilityListener(ActionListener listener) {
-        changeAvailability.addActionListener(listener);
+        if (listener == null) {
+            System.out.println("Listener is null!"); // Debug log
+        } else {
+            changeAvailability.addActionListener(listener);
+            System.out.println("Listener added to changeAvailability button."); // Debug log
+        };
     }
 
     // Mengatur teks pada JTextField (status availability)

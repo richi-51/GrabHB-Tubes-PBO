@@ -84,7 +84,7 @@ public class TemplateMenu extends JFrame {
         profilePic = getAbsolutePathFoto("../GrabHB-Tubes-PBO/src/Asset/Profile Picture Default.png");
 
         // ubah profile pic jika sudah di-set sebelumnya
-        setProfilePicPath(SingletonManger.getInstance().getLoggedInUser().getProfilePicPath());
+        // setProfilePicPath(SingletonManger.getInstance().getLoggedInUser().getProfilePicPath());
 
         setTitle(titleFrame);
         setSize(WIDTH_FRAME, HEIGHT_FRAME);
@@ -236,7 +236,8 @@ public class TemplateMenu extends JFrame {
 
         Vehicle vehicle = new Car(1, "Toyota Alya", "D123XX", 3);
         Driver driver = new Driver(1, "driver_username", "driver_name", "12345", "0814355465776", "driver_email@coba.com", null, null, "", null, null, null, vehicle, null, 0, null, StatusVerification.UNVERIFIED);
-        SingletonManger.getInstance().setLoggedInUser(driver);
+        // SingletonManger.getInstance().setLoggedInUser(driver);
+
 
         JPanel panel1 = new JPanel();
         panel1.add(new JLabel("This is the Manage Customers panel."));
@@ -260,9 +261,9 @@ public class TemplateMenu extends JFrame {
         panel10.add(new JLabel("This is the ninth panel."));
 
         TemplateMenu tmp = new TemplateMenu();
-        Component panels[] = {panel1, panel2, panel3, new TotalPendapatan(tmp, true), new ManageLaporan(tmp), new ManageVoucher(tmp), new ManageDriver(tmp), new ManageCustomer(tmp), new UpdateProfile(tmp), null};
+        Component panels[] = {panel1, new DriverOrderPage(tmp), new UpdateAvailabilityPage(tmp), new TotalPendapatan(tmp, true), new ManageLaporan(tmp), new ManageVoucher(tmp), new ManageDriver(tmp), new ManageCustomer(tmp), new UpdateProfile(tmp), null};
 
-        tmp = new TemplateMenu("trial", new String[]{"Manage Customers", "Manage Drivers", "Manage Vouchers", "Panel-4", "Panel-5", "Panel-6", "Panel-7", "Panel-8", "Panel-9"}, panels, "Welcome to Admin Panel");
+        tmp = new TemplateMenu("trial", new String[]{"Manage Customers", "Accept Order", "Update My Availability", "Panel-4", "Panel-5", "Panel-6", "Panel-7", "Panel-8", "Panel-9"}, panels, "Welcome to Admin Panel");
     }
 
 }

@@ -3,11 +3,14 @@ package Controller;
 import Model.Class.Singleton.SingletonManger;
 import Model.Class.Db.DatabaseHandler;
 import Model.Class.Location.Lokasi;
+import Model.Class.Order.Laporan;
 import Model.Class.Order.Order;
 import Model.Class.Order.Voucher;
 import Model.Enum.OrderStatus;
 import Model.Enum.PaymentMethod;
 import Model.Enum.ServiceType;
+import Model.Enum.StatusLaporan;
+
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -53,11 +56,34 @@ public class DriverOrderService {
                 rs.getInt("ID_Voucher"), 
                 rs.getString("kodeVoucher"), 
                 rs.getDouble("jumlahPotongan"), 
+                ServiceType.valueOf(rs.getString("serviceType")),
                 new Date(rs.getTimestamp("valid_from").getTime()), 
                 new Date(rs.getTimestamp("valid_to").getTime()), 
-                new Date(rs.getTimestamp("created_at").getTime()), 
-                new Date(rs.getTimestamp("updated_at").getTime())
+                (rs.getTimestamp("created_at").toLocalDateTime()), 
+                (rs.getTimestamp("updated_at").toLocalDateTime()),
+                rs.getString(" ")
             );
+        }
+        return null;
+    }
+
+    private static Laporan fetchLaporan(int ID_Order) throws SQLException{
+        Connection conn = DatabaseHandler.connect();
+
+        String query = "SELECT * FROM laporan WHERE ID_Order = ?";
+        PreparedStatement pstmt =  conn.prepareStatement(query);
+        pstmt.setInt(1, ID_Order);
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            return new Laporan(
+                rs.getInt("ID_Laporan"), 
+                rs.getString("isiKeluhan"), 
+                StatusLaporan.valueOf(rs.getString("statusLaporan")), 
+                new Date(rs.getTimestamp("createdAt").getTime()), 
+                new Date(rs.getTimestamp("finishAt").getTime())
+            );
+            
         }
         return null;
     }
@@ -99,7 +125,7 @@ public class DriverOrderService {
     public static List<Order> fetchOrders(int ID_Driver) throws SQLException {
         Connection conn = DatabaseHandler.connect();
 
-        String query = "SELECT * FROM order WHERE order_status IS NULL AND ";
+        String query = "SELECT * FROM `order` WHERE order_status IS NULL AND ";
         
         String serviceType = cekServiceType(ID_Driver);  
         if (serviceType.equals("GrabBike")) {
@@ -114,7 +140,8 @@ public class DriverOrderService {
         List<Order> orders = new ArrayList<>();
         while (rs.next()) {
             Voucher voucher = fetchVoucher(rs.getInt("ID_Voucher"));
-            
+            Laporan laporan = fetchLaporan(rs.getInt("ID_Order"));
+
             int ID_WilayahPickUp = rs.getInt("ID_WilayahPickUp");
             int ID_WilayahDestination = rs.getInt("ID_WilayahDestination");
             Lokasi lokasiPickUp = fetchRegionLocation(ID_WilayahPickUp);
@@ -129,6 +156,7 @@ public class DriverOrderService {
                     rs.getInt("ID_Driver"), 
                     rs.getInt("ID_Customer"), 
                     voucher, 
+                    laporan,
                     lokasiPickUp, 
                     lokasiDestionation, 
                     ServiceType.valueOf(rs.getString("serviceType")), 
@@ -148,14 +176,14 @@ public class DriverOrderService {
 
     public static void confirmOrder(int ID_Order) throws SQLException{
         Connection conn = DatabaseHandler.connect();
-
+    
         String query = "UPDATE order SET order_status = 'On_Progress' AND ID_Driver = ? WHERE ID_Order = ?";
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setInt(1, SingletonManger.getInstance().getLoggedInUser().getIdUser());
         stmt.setInt(2, ID_Order);
         stmt.executeUpdate();
 
-        String query2 = "UPDATE users SET availability = 'Occupied' WHERE ID_Driver = ?";
+        String query2 = "UPDATE users SET availability = 'Occupied' WHERE ID_User = ?";
         PreparedStatement stmt2 = conn.prepareStatement(query2);
         stmt2.setInt(1, SingletonManger.getInstance().getLoggedInUser().getIdUser());
         stmt2.executeUpdate();        
@@ -164,7 +192,7 @@ public class DriverOrderService {
     public static Order fetchCurrentOrder(int ID_Driver) throws SQLException{
         Connection conn = DatabaseManager.connect();
         
-        String query = "SELECT * FROM order WHERE ID_Driver = ? AND order_status = 'On_Progress'";
+        String query = "SELECT * FROM `order` WHERE ID_Driver = ? AND order_status = 'On_Progress'";
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setInt(1, ID_Driver);
         ResultSet rs = stmt.executeQuery();
@@ -172,6 +200,7 @@ public class DriverOrderService {
         Order currentOrder = null;
         if (rs.next()) {
             Voucher voucher = fetchVoucher(rs.getInt("ID_Voucher"));
+            Laporan laporan = fetchLaporan(rs.getInt("ID_Order"));
 
             int ID_WilayahPickUp = rs.getInt("ID_WilayahPickUp");
             int ID_WilayahDestination = rs.getInt("ID_WilayahDestination");
@@ -187,6 +216,7 @@ public class DriverOrderService {
                     ID_Driver, 
                     rs.getInt("ID_Customer"), 
                     voucher, 
+                    laporan,
                     lokasiPickUp, 
                     lokasiDestionation, 
                     ServiceType.valueOf(rs.getString("serviceType")), 
@@ -214,7 +244,7 @@ public class DriverOrderService {
     public static List<Order> fetchCompletedOrders(int ID_Driver) throws SQLException{
         Connection conn = DatabaseHandler.connect();
         
-        String query = "SELECT * FROM order WHERE ID_Driver = ? AND order_status = 'COMPLETE'";
+        String query = "SELECT * FROM `order` WHERE ID_Driver = ? AND order_status = 'COMPLETE'";
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setInt(1, ID_Driver);
         ResultSet rs = stmt.executeQuery();
@@ -225,6 +255,7 @@ public class DriverOrderService {
             int ID_WilayahDestination = rs.getInt("ID_WilayahDestination");
 
             Voucher voucher = fetchVoucher(rs.getInt("ID_Voucher"));
+            Laporan laporan = fetchLaporan(rs.getInt("ID_Order"));
 
             Lokasi lokasiPickUp = fetchRegionLocation(ID_WilayahPickUp);
             Lokasi lokasiDestionation = fetchRegionLocation(ID_WilayahDestination);
@@ -237,6 +268,7 @@ public class DriverOrderService {
                 rs.getInt("ID_Driver"), 
                 rs.getInt("ID_Customer"), 
                 voucher, 
+                laporan,
                 lokasiPickUp, 
                 lokasiDestionation, 
                 ServiceType.valueOf(rs.getString("serviceType")), 
@@ -253,12 +285,23 @@ public class DriverOrderService {
         return orders;
     }
 
+    public static void updateLocation(int ID_Order) throws SQLException{
+        Connection conn = DatabaseHandler.connect();
+        
+        String query = "UPDATE order SET updatedOrder = ? WHERE ID_Order = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        Timestamp location_now = Timestamp.valueOf(LocalDateTime.now());
+        stmt.setTimestamp(10, location_now);
+        stmt.setInt(2, ID_Order);
+        stmt.executeUpdate();
+    }
+
     // public static double calculateDriverIncomes(int ID_Driver){
     //     double totalIncomes = 0.0;
     //     DatabaseHandler conn = new DatabaseHandler();
     //     conn.connect();
 
-    //     String query = "SELECT SUM(price) AS total_income FROM order WHERE ID_Driver = ? AND order_status = 'COMPLETE'";
+    //     String query = "SELECT SUM(price) AS total_income FROM `order` WHERE ID_Driver = ? AND order_status = 'COMPLETE'";
     //     PreparedStatement stmt = conn.con.prepareStatement(query);
     //     stmt.setInt(1, ID_Driver);
     //     ResultSet rs = stmt.executeQuery();

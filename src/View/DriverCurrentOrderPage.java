@@ -37,6 +37,21 @@ public class DriverCurrentOrderPage implements DriverOrderController.OrderView {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
 
+        JButton updateLocation = new JButton("Update Location");
+        updateLocation.addActionListener(e -> {
+            try {
+                Order currentOrder = DriverOrderController.getCurrentOrder(loggedInUser.getID_Driver());
+                if (currentOrder != null) {
+                    controller.updatedLocation(currentOrder.getID_order());
+                    currentOrder.setOrder_status(OrderStatus.COMPLETE);
+                    frame.dispose();
+                    new DriverPage();
+                }
+            }catch (SQLException ex){
+                ex.printStackTrace();
+            }
+        });
+
         JButton completeButton = new JButton("Complete Drive");
         completeButton.addActionListener(e -> {
             try {
@@ -44,7 +59,6 @@ public class DriverCurrentOrderPage implements DriverOrderController.OrderView {
                 if (currentOrder != null) {
                     controller.completeOrder(currentOrder.getID_order());
                     currentOrder.setOrder_status(OrderStatus.COMPLETE);
-                    displayError("Order berhasil diselesaikan, silahkan pilih order lain yang tersedia");
                     frame.dispose();
                     new DriverPage();
                 }
