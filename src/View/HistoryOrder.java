@@ -28,7 +28,10 @@ import Model.Class.Order.GrabCar;
 import Model.Class.Order.Order;
 import Model.Class.User.Driver;
 import Model.Class.Vehicle.Car;
+<<<<<<< HEAD
+=======
 import Model.Enum.OrderStatus;
+>>>>>>> 1f3a179cdf68c3b63e5dbafc0d736bdb32f8bb59
 
 public class HistoryOrder extends JPanel{
     private JPanel panelSorting;
@@ -147,6 +150,21 @@ public class HistoryOrder extends JPanel{
             panelOrders[i].add(new JLabel("Potongan Voucher: " + orderSorted.get(i).getVoucher().getJumlahPotongan()));
 
             
+<<<<<<< HEAD
+            final int index = i;
+            panelButton[i] = new JPanel(new GridLayout(1, 2, 15,15));
+
+            ratingButton[i] = new JButton("Rating This Order");
+            ratingButton[i].addActionListener(e-> showRatingDriver(new HistoryOrderController().getDetailDriver(orderSorted.get(index).getID_driver()), orderSorted.get(index).getID_order()));
+
+            reportButton[i] = new JButton("Report This Order");
+            reportButton[i].addActionListener(e-> showReportOrder(orderSorted.get(index).getID_order()));
+            
+            panelButton[i].add(ratingButton[i]);
+            panelButton[i].add(reportButton[i]);
+            
+            panelOrders[i].add(panelButton[i]);
+=======
             
             
             final int index = i;
@@ -165,7 +183,9 @@ public class HistoryOrder extends JPanel{
                 panelOrders[i].add(panelButton[i]);
             }
             
+>>>>>>> 1f3a179cdf68c3b63e5dbafc0d736bdb32f8bb59
             containerPanel.add(panelOrders[i]);
+
         }
 
         return containerPanel;
