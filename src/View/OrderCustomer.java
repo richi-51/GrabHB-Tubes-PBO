@@ -57,34 +57,6 @@ public class OrderCustomer extends JPanel {
         panelUtama.setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL - 50));
         panelUtama.setBorder(null);
 
-        // Buat untuk sorting
-        // panelSorting = new JPanel(new FlowLayout(50, 100, 50));
-        // JComboBox<String> sortOptions = new JComboBox<>(new String[]{"Sort Drivers
-        // by", "Verified", "Unverified"});
-        // sortOptions.setPreferredSize(new Dimension(150, 50));
-
-        // JButton sortButton = new JButton("GO");
-        // sortButton.setPreferredSize(new Dimension(150, 50));
-        // sortButton.addActionListener(new ActionListener() {
-        // @Override
-        // public void actionPerformed(ActionEvent e) {
-        // if (sortOptions.getSelectedItem().toString().equalsIgnoreCase("Sort Drivers
-        // by")) {
-        // panelUtama.setViewportView(showDataDriver(drivers));
-        // }else
-        // if(sortOptions.getSelectedItem().toString().equalsIgnoreCase("Verified")){
-        // panelUtama.setViewportView(showDataDriver(getDataSortByVerified()));
-        // }else{
-        // panelUtama.setViewportView(showDataDriver(getDataSortByUnverified()));
-        // }
-        // panelUtama.revalidate();
-        // panelUtama.repaint();
-        // }
-        // });
-
-        // panelSorting.add(sortOptions);
-        // panelSorting.add(sortButton);
-
         // Masukkan containerPanel ke JScrollPane
         panelUtama.setViewportView(showFormOrder(orderType, serviceType));
 
