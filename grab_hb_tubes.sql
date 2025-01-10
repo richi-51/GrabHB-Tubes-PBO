@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 19, 2024 at 08:37 AM
+-- Generation Time: Jan 02, 2025 at 11:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,7 @@ CREATE TABLE `laporan` (
 --
 
 INSERT INTO `laporan` (`ID_Laporan`, `ID_Order`, `isiKeluhan`, `statusLaporan`, `createdAt`, `finishAt`) VALUES
-(1, 2, 'Driver tidak datang tepat waktu', 'Done', '2024-12-16', '2024-12-17');
+(1, 2, 'Driver tidak datang tepat waktu', 'Done', '2024-12-16', '2025-01-02');
 
 -- --------------------------------------------------------
 
@@ -108,12 +108,12 @@ CREATE TABLE `order` (
   `ID_WilayahPickUp` int(11) NOT NULL,
   `ID_WilayahDestination` int(11) NOT NULL,
   `serviceType` enum('GrabCar','GrabBike') DEFAULT NULL,
-  `order_status` enum('Complete','On_Progress','Cancelled') DEFAULT NULL,
+  `order_status` enum('Complete','On_Process','Cancelled') DEFAULT NULL,
   `order_date` date DEFAULT NULL,
   `updatedOrder` datetime DEFAULT NULL,
   `paymentMethod` enum('Cash','OVO') DEFAULT NULL,
   `price` double DEFAULT NULL,
-  `orderType` enum('Hemat','Reguler','XL') DEFAULT NULL,
+  `orderType` enum('Hemat','Reguler','XL','Fast_Track','Electric') DEFAULT NULL,
   `rating` double DEFAULT NULL,
   `ulasan` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -124,7 +124,7 @@ CREATE TABLE `order` (
 
 INSERT INTO `order` (`ID_Order`, `ID_Customer`, `ID_Driver`, `ID_Voucher`, `ID_WilayahPickUp`, `ID_WilayahDestination`, `serviceType`, `order_status`, `order_date`, `updatedOrder`, `paymentMethod`, `price`, `orderType`, `rating`, `ulasan`) VALUES
 (1, 2, 1, 1, 1, 2, 'GrabCar', 'Complete', '2024-12-15', '2024-12-18 19:12:48', 'Cash', 50000, 'Reguler', 4.5, 'Good service'),
-(2, 5, 4, 2, 3, 4, 'GrabBike', 'Cancelled', '2024-12-16', '2024-12-18 19:12:48', 'OVO', 30000, 'Hemat', NULL, 'N/A');
+(2, 5, 4, 2, 3, 4, 'GrabBike', 'Cancelled', '2024-12-16', '2024-12-18 19:12:48', 'OVO', 30000, 'Hemat', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -182,9 +182,9 @@ INSERT INTO `users` (`ID_User`, `vehicle_ID`, `name`, `username`, `password`, `e
 (3, NULL, 'Admin One', 'adminone', 'adminpass', 'adminone@example.com', '2024-12-18 19:12:47', 'Admin', 'Unblock', '2024-12-18 19:12:47', 'adminprofile.jpg', NULL, 'None'),
 (4, 3, 'Alice Brown', 'aliceb', 'password123', 'aliceb@example.com', '2024-12-18 19:12:47', 'Driver', 'Unblock', '2024-12-18 19:12:47', 'profile3.jpg', 'Online', 'Verified'),
 (5, 4, 'Bob White', 'bobw', 'password123', 'bobw@example.com', '2024-12-18 19:12:47', 'Customer', 'Block', '2024-12-18 19:12:47', 'profile4.jpg', NULL, 'None'),
-(7, 7, 'Andi', 'idna', '1234567', 'andi@example.com', NULL, 'Driver', 'Unblock', '2024-12-18 21:11:40', NULL, 'Online', 'Unverified'),
+(7, 7, 'Andi', 'idna', '1234567', 'andi@example.com', NULL, 'Driver', 'Unblock', '2024-12-18 21:11:40', NULL, 'Online', 'Verified'),
 (9, NULL, 'Alice', 'ecila', '12345', 'alice@contoh.com', NULL, 'Customer', 'Unblock', '2024-12-18 21:39:10', NULL, NULL, 'None'),
-(10, 8, 'akwila', 'aliwka', '123', 'akwila@coba.com', NULL, 'Driver', 'Unblock', '2024-12-18 21:42:38', NULL, 'Online', 'Unverified'),
+(10, 8, 'akwila', 'aliwka', '123', 'akwila@coba.com', NULL, 'Driver', 'Unblock', '2024-12-18 21:42:38', NULL, 'Online', 'Verified'),
 (11, NULL, 'AA', 'aa', '11111', 'aa@contoh.com', NULL, 'Customer', 'Unblock', '2024-12-18 21:46:48', NULL, NULL, 'None'),
 (12, NULL, 'BB', 'bb', '123456789', 'BB@trial.com', NULL, 'Customer', 'Unblock', '2024-12-18 22:00:46', NULL, NULL, 'None'),
 (13, NULL, 'CC', 'cc', '12345678', 'cc@trial.com', NULL, 'Customer', 'Unblock', '2024-12-18 22:02:29', NULL, NULL, 'None'),
@@ -229,7 +229,7 @@ INSERT INTO `vehicle` (`vehicle_ID`, `plateNumber`, `vehicleName`, `vehicleType`
 
 CREATE TABLE `voucher` (
   `ID_Voucher` int(11) NOT NULL,
-  `ID_Customer` int(11) NOT NULL,
+  `ID_Customer` int(11) DEFAULT NULL,
   `ID_Admin` int(11) NOT NULL,
   `kodeVoucher` varchar(50) DEFAULT NULL,
   `serviceType` enum('GrabCar','GrabBike') DEFAULT NULL,
@@ -245,8 +245,8 @@ CREATE TABLE `voucher` (
 --
 
 INSERT INTO `voucher` (`ID_Voucher`, `ID_Customer`, `ID_Admin`, `kodeVoucher`, `serviceType`, `jumlahPotongan`, `valid_from`, `valid_to`, `created_at`, `update_at`) VALUES
-(1, 2, 3, 'DISC10', 'GrabCar', 10000, '2024-12-01', '2024-12-31', '2024-12-18 19:12:48', '2024-12-18 19:12:48'),
-(2, 5, 3, 'DISC20', 'GrabBike', 20000, '2024-12-01', '2024-12-31', '2024-12-18 19:12:48', '2024-12-18 19:12:48');
+(1, 2, 3, 'DISC10', 'GrabCar', 10000, '2024-12-01', '2024-12-31', '2024-12-18 19:12:48', '2025-01-01 00:57:19'),
+(2, 5, 3, 'DISC20', 'GrabBike', 20000, '2024-12-25', '2024-12-31', '2024-12-18 19:12:48', '2025-01-01 00:34:31');
 
 -- --------------------------------------------------------
 
@@ -323,7 +323,7 @@ ALTER TABLE `ovo`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`ID_User`),
-  ADD KEY `vehicle_ID` (`vehicle_ID`);
+  ADD KEY `users_ibfk_1` (`vehicle_ID`);
 
 --
 -- Indexes for table `vehicle`
@@ -336,8 +336,8 @@ ALTER TABLE `vehicle`
 --
 ALTER TABLE `voucher`
   ADD PRIMARY KEY (`ID_Voucher`),
-  ADD KEY `ID_Customer` (`ID_Customer`),
-  ADD KEY `ID_Admin` (`ID_Admin`);
+  ADD KEY `voucher_ibfk_1` (`ID_Customer`),
+  ADD KEY `voucher_ibfk_2` (`ID_Admin`);
 
 --
 -- Indexes for table `wilayah`
@@ -389,7 +389,7 @@ ALTER TABLE `vehicle`
 -- AUTO_INCREMENT for table `voucher`
 --
 ALTER TABLE `voucher`
-  MODIFY `ID_Voucher` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID_Voucher` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `wilayah`
@@ -440,7 +440,7 @@ ALTER TABLE `ovo`
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
-  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`vehicle_ID`) REFERENCES `vehicle` (`vehicle_ID`);
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`vehicle_ID`) REFERENCES `vehicle` (`vehicle_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `voucher`
